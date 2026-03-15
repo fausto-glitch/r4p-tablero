@@ -123,6 +123,7 @@
     display: flex; gap: 4px; margin: 12px 0 20px; flex-wrap: wrap;
     background: rgba(19,29,16,0.6); padding: 5px; border-radius: 10px;
     border: 1px solid rgba(30,58,30,0.4);
+    position: sticky; top: 0; z-index: 100;
   }
   .tab {
     padding: 8px 20px; border-radius: 7px; font-size: 0.75rem;
@@ -147,6 +148,51 @@
     background: linear-gradient(135deg, #6A3880, #9C27B0); color: #fff;
     box-shadow: 0 2px 8px rgba(156,39,176,0.25);
   }
+
+  /* === SEARCH & FILTER === */
+  .search-bar {
+    display: flex; gap: 10px; align-items: center; margin-bottom: 16px;
+    background: rgba(19,29,16,0.8); border: 1px solid rgba(30,58,30,0.5);
+    border-radius: 10px; padding: 10px 16px;
+  }
+  .search-input {
+    flex: 1; background: transparent; border: none; outline: none;
+    font-family: 'R4P Body', sans-serif; font-size: 0.85rem;
+    color: var(--r4p-text); padding: 4px 0;
+  }
+  .search-input::placeholder { color: var(--r4p-muted); }
+  .search-icon { color: var(--r4p-muted); font-size: 1rem; flex-shrink: 0; }
+  .filter-chips {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .filter-chip {
+    padding: 4px 12px; border-radius: 20px; font-size: 0.68rem;
+    font-family: 'R4P Heading', sans-serif; font-weight: 600;
+    cursor: pointer; border: 1px solid rgba(255,255,255,0.12);
+    background: transparent; color: var(--r4p-muted); transition: all 0.2s;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .filter-chip:hover { border-color: rgba(200,169,78,0.3); color: var(--r4p-accent); }
+  .filter-chip.active { background: rgba(200,169,78,0.15); border-color: var(--r4p-accent); color: var(--r4p-accent); }
+  .state-toggle {
+    cursor: pointer; user-select: none;
+  }
+  .state-toggle .toggle-icon {
+    transition: transform 0.2s; display: inline-block; font-size: 0.7rem; margin-right: 6px;
+  }
+  .state-toggle.collapsed .toggle-icon { transform: rotate(-90deg); }
+  .state-content { transition: max-height 0.3s ease; overflow: hidden; }
+  .state-content.collapsed { max-height: 0 !important; margin-bottom: 0; }
+  .view-toggle {
+    display: flex; gap: 4px; margin-left: auto;
+  }
+  .view-btn {
+    padding: 3px 10px; border-radius: 5px; font-size: 0.65rem;
+    font-family: 'R4P Heading', sans-serif; cursor: pointer;
+    border: 1px solid rgba(200,169,78,0.2); background: transparent;
+    color: var(--r4p-muted); transition: all 0.2s; letter-spacing: 0.5px;
+  }
+  .view-btn.active { background: rgba(200,169,78,0.15); color: var(--r4p-accent); border-color: var(--r4p-accent); }
 
   /* === SECTION TITLES === */
   .section-title {
@@ -253,6 +299,48 @@
   }
   .mx-card .card-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; }
 
+  /* === COMPACT MODE for large datasets === */
+  .grid-compact {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 8px;
+  }
+  .mx-card-compact {
+    background: linear-gradient(160deg, #181810 0%, #131D10 100%);
+    border: 1px solid rgba(42,53,32,0.7); border-radius: 8px; padding: 12px 14px;
+    position: relative; overflow: hidden; transition: all 0.2s ease;
+  }
+  .mx-card-compact:hover {
+    border-color: rgba(200,169,78,0.35); transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .mx-card-compact .card-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; }
+  .mx-card-compact .compact-top {
+    display: flex; justify-content: space-between; align-items: center; gap: 6px;
+  }
+  .mx-card-compact .compact-name {
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 0.72rem; color: var(--r4p-text); font-weight: 600; line-height: 1.2;
+    flex: 1; min-width: 0;
+  }
+  .mx-card-compact .compact-price {
+    font-size: 1.15rem; font-weight: 800; font-family: 'R4P Heading', sans-serif;
+    letter-spacing: -0.5px; white-space: nowrap;
+  }
+  .mx-card-compact .compact-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 6px; font-size: 0.65rem; color: var(--r4p-muted);
+  }
+  .mx-card-compact .compact-change { font-size: 0.68rem; font-weight: 700; }
+  .mx-card-compact .compact-range {
+    display: flex; gap: 8px; font-size: 0.58rem; color: #4a5a3e;
+    font-family: 'R4P Heading', sans-serif; margin-top: 4px;
+  }
+  /* Range bar visual */
+  .range-indicator { height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-top: 6px; position: relative; }
+  .range-indicator .range-fill { position: absolute; top: 0; height: 100%; border-radius: 2px; }
+  .range-indicator .range-dot { position: absolute; top: -3px; width: 9px; height: 9px; border-radius: 50%; border: 2px solid; transform: translateX(-50%); }
+
   /* === PECUARIOS CARD (new) === */
   .pec-card {
     background: linear-gradient(160deg, #1A1320 0%, #151020 100%);
@@ -328,10 +416,46 @@
     color: var(--r4p-accent); letter-spacing: 2px; font-size: 0.75rem; margin-top: 10px; opacity: 0.8;
   }
 
+  /* === TREND CHART === */
+  .trend-section {
+    margin-top: 28px; padding: 24px;
+    background: linear-gradient(160deg, #0E150C 0%, #111A0E 100%);
+    border: 1px solid rgba(30,58,30,0.5); border-radius: 12px;
+  }
+  .trend-title {
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 0.82rem; color: var(--r4p-accent); font-weight: 700;
+    margin-bottom: 6px; letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .trend-subtitle { font-size: 0.68rem; color: var(--r4p-muted); margin-bottom: 18px; }
+  .trend-chart-wrap {
+    position: relative; width: 100%; overflow-x: auto;
+  }
+  .trend-chart-wrap svg { display: block; }
+  .trend-legend {
+    display: flex; flex-wrap: wrap; gap: 10px 20px; margin-top: 14px;
+    justify-content: center;
+  }
+  .trend-legend-item {
+    display: flex; align-items: center; gap: 6px; font-size: 0.68rem;
+    font-family: 'R4P Heading', sans-serif; color: var(--r4p-muted);
+    cursor: pointer; transition: opacity 0.2s; letter-spacing: 0.3px;
+  }
+  .trend-legend-item:hover { opacity: 0.8; }
+  .trend-legend-item .legend-line {
+    width: 22px; height: 3px; border-radius: 2px; flex-shrink: 0;
+  }
+  .trend-legend-item.muted { opacity: 0.25; }
+  .trend-note {
+    text-align: center; font-size: 0.6rem; color: #3a4a2e;
+    margin-top: 10px; letter-spacing: 0.3px;
+  }
+
   /* === RESPONSIVE === */
   @media (max-width: 768px) {
     .brand-text h1 { font-size: 1rem; letter-spacing: 1px; }
     .grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid-compact { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; }
     .container { padding: 12px 14px; }
     .header-inner { padding: 14px 16px; }
     .brand-logo { width: 42px; height: 42px; font-size: 0.85rem; border-radius: 8px; }
@@ -402,6 +526,16 @@
     <div class="section-title" style="margin-top:30px;border-bottom-color:rgba(200,169,78,0.2);">
       <span class="icon">🇲🇽</span> <span class="accent">Ganado Bovino Mexicano</span> &mdash; Subastas Regionales (MXN $/kg en pie)
     </div>
+    <!-- Search & Filters -->
+    <div class="search-bar" id="cattle-search-bar">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" class="search-input" id="cattle-search" placeholder="Buscar categoria, estado, peso..." oninput="filterCattle()">
+      <div class="view-toggle">
+        <button class="view-btn active" onclick="setView('compact')" id="btn-compact">Compacto</button>
+        <button class="view-btn" onclick="setView('full')" id="btn-full">Detalle</button>
+      </div>
+    </div>
+    <div class="filter-chips" id="state-chips"></div>
     <div id="ganadomx-grid"></div>
 
     <!-- CONTEXT -->
@@ -417,8 +551,17 @@
       <div style="display:flex;justify-content:space-around;font-family:'R4P Heading',sans-serif;font-size:0.68rem;color:var(--r4p-muted);margin-top:6px;" id="mx-history-labels"></div>
     </div>
 
+    <!-- TENDENCIA MENSUAL -->
+    <div class="trend-section">
+      <div class="trend-title">Tendencia de Precios Mensuales ($/kg)</div>
+      <div class="trend-subtitle">Promedio nacional por categoria &mdash; Ultimos 12 meses (Abr 2025 &ndash; Mar 2026)</div>
+      <div class="trend-chart-wrap" id="trend-chart"></div>
+      <div class="trend-legend" id="trend-legend"></div>
+      <div class="trend-note">Promedios estimados con base en reportes de subastas regionales. * Mar 2026 = datos parciales.</div>
+    </div>
+
     <div class="sources-text">
-      Fuentes: UGRS, UGRCH, AGL Cusi, UGRJ, Subasta Ganadera NL, AGL Durango, UGRT, SNIIM, USDA/AMS, Mexico Ganadero
+      Fuentes: UGRS, UGRCH, AGL Cusi, UGRJ, Sub. Ganadera NL, AGL Durango, UGRT, UGR Veracruz, UGR Tabasco, AGL Balancan, UGR Chiapas, SNIIM, USDA/AMS
     </div>
   </div>
 
@@ -444,7 +587,7 @@
 <!-- FOOTER -->
 <div class="footer">
   <p>Los precios mostrados son referenciales con retraso. No constituyen asesoramiento financiero.</p>
-  <p style="margin-top:4px;">Fuentes: CME Group, Yahoo Finance, SNIIM, UGRS, UGRCH, AGL Cusi, UGRJ, AGL Durango, UGRT, USDA/AMS, Porcicultura.com, UNA, SIAP</p>
+  <p style="margin-top:4px;">Fuentes: CME Group, Yahoo Finance, SNIIM, UGRS, UGRCH, AGL Cusi, UGRJ, AGL Durango, UGRT, UGR Veracruz, UGR Tabasco, UGR Chiapas, USDA/AMS, Porcicultura.com, UNA, SIAP</p>
   <div class="brand-footer">RANCHING 4 PROFIT MX &copy; 2026</div>
 </div>
 
@@ -971,6 +1114,45 @@ const pecuariosFuentes = [
 ];
 
 // ========================================================
+// VIEW STATE & FILTERS
+// ========================================================
+let cattleView = 'compact'; // 'compact' or 'full'
+let activeStates = new Set(); // empty = show all
+let searchTerm = '';
+
+function setView(mode) {
+  cattleView = mode;
+  document.getElementById('btn-compact').classList.toggle('active', mode === 'compact');
+  document.getElementById('btn-full').classList.toggle('active', mode === 'full');
+  renderMXCattle();
+}
+
+function toggleStateFilter(state) {
+  if (activeStates.has(state)) activeStates.delete(state);
+  else activeStates.add(state);
+  renderMXCattle();
+}
+
+function filterCattle() {
+  searchTerm = document.getElementById('cattle-search').value.toLowerCase().trim();
+  renderMXCattle();
+}
+
+function toggleStateCollapse(stateId) {
+  const header = document.querySelector(`[data-state-header="${stateId}"]`);
+  const content = document.querySelector(`[data-state-content="${stateId}"]`);
+  if (!header || !content) return;
+  header.classList.toggle('collapsed');
+  if (content.classList.contains('collapsed')) {
+    content.style.maxHeight = content.scrollHeight + 'px';
+    content.classList.remove('collapsed');
+  } else {
+    content.style.maxHeight = content.scrollHeight + 'px';
+    requestAnimationFrame(() => { content.style.maxHeight = '0'; content.classList.add('collapsed'); });
+  }
+}
+
+// ========================================================
 // RENDER FUNCTIONS
 // ========================================================
 function renderMXCattle() {
@@ -978,70 +1160,127 @@ function renderMXCattle() {
   if (!container) return;
   let html = '';
 
-  // Group by state
   const stateOrder = ["Sonora","Chihuahua","Chihuahua (Cusi)","Nuevo Leon","Jalisco","Durango","Tamaulipas","Veracruz","Tabasco","Chiapas"];
   const stateLabels = {
     "Sonora": "Hermosillo, Sonora (UGRS)",
     "Chihuahua": "Chihuahua (UGRCH / USDA)",
-    "Chihuahua (Cusi)": "Cusihuiriachi, Cuauhtemoc, Chih. (AGL Cusi / UGRCH)",
+    "Chihuahua (Cusi)": "Cusihuiriachi, Cuauhtemoc, Chih. (AGL Cusi)",
     "Nuevo Leon": "Nuevo Leon (Subasta Ganadera NL)",
     "Jalisco": "Jalisco / GDL (UGRJ)",
     "Durango": "Durango (AGL Durango)",
     "Tamaulipas": "Tamaulipas (UGRT)",
     "Veracruz": "Veracruz Zona Centro (UGR Veracruz)",
-    "Tabasco": "Tabasco / Balancán (UGR Tabasco)",
+    "Tabasco": "Tabasco / Balancan (UGR Tabasco)",
     "Chiapas": "Chiapas (UGR Chiapas / SNIIM)",
   };
-  stateOrder.forEach(state => {
+
+  // Render state filter chips
+  const chipsEl = document.getElementById('state-chips');
+  if (chipsEl) {
+    chipsEl.innerHTML = stateOrder.map(s => {
+      const sc = stateConfig[s];
+      const isActive = activeStates.has(s);
+      const count = ganadoMX.filter(g => g.state === s).length;
+      return `<button class="filter-chip ${isActive ? 'active' : ''}"
+        style="${isActive ? 'border-color:'+sc.color+';color:'+sc.color+';background:'+sc.bg : ''}"
+        onclick="toggleStateFilter('${s}')">${s} <span style="opacity:0.5;font-weight:400;">(${count})</span></button>`;
+    }).join('');
+  }
+
+  // Filter data
+  const filteredStates = activeStates.size > 0 ? stateOrder.filter(s => activeStates.has(s)) : stateOrder;
+
+  filteredStates.forEach(state => {
     const sc = stateConfig[state];
-    const items = ganadoMX.filter(g => g.state === state);
+    let items = ganadoMX.filter(g => g.state === state);
+
+    // Apply search filter
+    if (searchTerm) {
+      items = items.filter(g =>
+        g.cat.toLowerCase().includes(searchTerm) ||
+        g.state.toLowerCase().includes(searchTerm) ||
+        g.peso.toLowerCase().includes(searchTerm) ||
+        g.fuente.toLowerCase().includes(searchTerm)
+      );
+    }
     if (items.length === 0) return;
 
-    html += `<div class="state-header" style="color:${sc.color};background:${sc.bg};border-left-color:${sc.borderLeft};">
+    const stateId = state.replace(/[^a-zA-Z]/g, '_');
+    html += `<div class="state-header state-toggle" data-state-header="${stateId}" onclick="toggleStateCollapse('${stateId}')" style="color:${sc.color};background:${sc.bg};border-left-color:${sc.borderLeft};">
+      <span class="toggle-icon">&#9660;</span>
       <span>${stateLabels[state] || state}</span>
       <span style="font-size:0.65rem;font-weight:400;opacity:0.6;margin-left:auto;">${items.length} categorias</span>
     </div>`;
-    html += '<div class="grid" style="margin-bottom:8px;">';
+
+    const gridClass = cattleView === 'compact' ? 'grid-compact' : 'grid';
+    html += `<div class="${gridClass} state-content" data-state-content="${stateId}" style="margin-bottom:8px;">`;
 
     items.forEach(item => {
       const change = item.price - item.prev;
       const changePct = (change / item.prev) * 100;
       const dir = change > 0 ? 'up' : change < 0 ? 'down' : 'flat';
-      const arrow = dir === 'up' ? '▲' : dir === 'down' ? '▼' : '■';
+      const arrow = dir === 'up' ? '&#9650;' : dir === 'down' ? '&#9660;' : '&#9632;';
       const range = item.high - item.low;
-      const pos = ((item.price - item.low) / range) * 100;
+      const pos = range > 0 ? ((item.price - item.low) / range) * 100 : 50;
       const colors = { up: '#4CAF50', down: '#EF5350', flat: '#C8A94E' };
       const c = colors[dir];
 
-      let miniHtml = '<div class="mini-chart">';
-      for (let i = 0; i < 12; i++) {
-        const drift = (i - 6) * (Math.random() * 1.3);
-        const h = Math.max(8, Math.min(95, pos + drift + (Math.random()-0.5)*10));
-        miniHtml += `<div class="mini-bar" style="height:${h}%;background:${c};"></div>`;
-      }
-      miniHtml += '</div>';
+      if (cattleView === 'compact') {
+        // COMPACT VIEW
+        html += `
+          <div class="mx-card-compact">
+            <div class="compact-top">
+              <div class="compact-name">${item.cat}</div>
+              <div class="compact-price ${dir}">$${item.price.toFixed(2)}</div>
+            </div>
+            <div class="compact-meta">
+              <span>${item.peso}</span>
+              <span class="compact-change ${dir}">${arrow} ${changePct >= 0 ? '+' : ''}${changePct.toFixed(1)}%</span>
+            </div>
+            <div class="range-indicator">
+              <div class="range-fill" style="left:0;width:${pos}%;background:linear-gradient(90deg,${sc.color}20,${sc.color}60);border-radius:2px;"></div>
+              <div class="range-dot" style="left:${pos}%;background:${c};border-color:${c};"></div>
+            </div>
+            <div class="compact-range"><span>$${item.low}</span><span>${item.fuente}</span><span>$${item.high}</span></div>
+            <div class="card-bar" style="background:linear-gradient(90deg, transparent, ${sc.color}40);"></div>
+          </div>`;
+      } else {
+        // FULL VIEW (original)
+        let miniHtml = '<div class="mini-chart">';
+        for (let i = 0; i < 12; i++) {
+          const drift = (i - 6) * (Math.random() * 1.3);
+          const h = Math.max(8, Math.min(95, pos + drift + (Math.random()-0.5)*10));
+          miniHtml += '<div class="mini-bar" style="height:'+h+'%;background:'+c+';"></div>';
+        }
+        miniHtml += '</div>';
 
-      html += `
-        <div class="mx-card">
-          <div class="card-header">
-            <div class="card-name" style="color:var(--r4p-text);">${item.cat}</div>
-            <div class="card-symbol" style="border-color:${sc.color}35;">${item.peso}</div>
-          </div>
-          <div class="card-price ${dir}" style="font-size:1.5rem;font-weight:800;font-family:'R4P Heading',sans-serif;margin:4px 0;letter-spacing:-0.5px;">$${item.price.toFixed(2)}</div>
-          <div class="card-unit">MXN $/kg en pie | ${item.fuente}</div>
-          ${miniHtml}
-          <div class="card-change" style="font-size:0.76rem;">
-            <span class="change-val ${dir}">${arrow} ${change >= 0 ? '+' : ''}$${change.toFixed(2)}</span>
-            <span class="${dir}">(${changePct >= 0 ? '+' : ''}${changePct.toFixed(1)}% vs anterior)</span>
-          </div>
-          <div class="range-row"><span>Min 5a: $${item.low}</span><span>Max 5a: $${item.high}</span></div>
-          <div class="card-bar" style="background:linear-gradient(90deg, transparent, ${sc.color}60);"></div>
-        </div>`;
+        html += `
+          <div class="mx-card">
+            <div class="card-header">
+              <div class="card-name" style="color:var(--r4p-text);">${item.cat}</div>
+              <div class="card-symbol" style="border-color:${sc.color}35;">${item.peso}</div>
+            </div>
+            <div class="card-price ${dir}" style="font-size:1.5rem;font-weight:800;font-family:'R4P Heading',sans-serif;margin:4px 0;letter-spacing:-0.5px;">$${item.price.toFixed(2)}</div>
+            <div class="card-unit">MXN $/kg en pie | ${item.fuente}</div>
+            ${miniHtml}
+            <div class="card-change" style="font-size:0.76rem;">
+              <span class="change-val ${dir}">${arrow} ${change >= 0 ? '+' : ''}$${change.toFixed(2)}</span>
+              <span class="${dir}">(${changePct >= 0 ? '+' : ''}${changePct.toFixed(1)}% vs anterior)</span>
+            </div>
+            <div class="range-row"><span>Min 5a: $${item.low}</span><span>Max 5a: $${item.high}</span></div>
+            <div class="card-bar" style="background:linear-gradient(90deg, transparent, ${sc.color}60);"></div>
+          </div>`;
+      }
     });
     html += '</div>';
   });
 
   container.innerHTML = html;
+
+  // Set max-height for animation
+  document.querySelectorAll('.state-content').forEach(el => {
+    el.style.maxHeight = el.scrollHeight + 'px';
+  });
 
   // Context cards
   const ctxGrid = document.getElementById('mx-context-cards');
@@ -1160,11 +1399,123 @@ function renderPecuarios() {
 }
 
 // ========================================================
+// TENDENCIA MENSUAL — 12 meses por categoria
+// ========================================================
+const trendMonths = ['Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar*'];
+
+const trendData = [
+  { name: 'Becerro', color: '#4CAF50', data: [98, 102, 108, 112, 115, 118, 120, 116, 112, 108, 112, 118] },
+  { name: 'Becerra', color: '#81C784', data: [82, 85, 88, 92, 95, 97, 99, 96, 93, 90, 93, 97] },
+  { name: 'Torete',  color: '#FFB74D', data: [72, 74, 76, 79, 82, 84, 86, 84, 82, 80, 83, 86] },
+  { name: 'Vaquilla', color: '#CE93D8', data: [65, 67, 69, 72, 74, 76, 78, 76, 74, 72, 74, 77] },
+  { name: 'Novillo', color: '#4FC3F7', data: [56, 58, 60, 62, 64, 66, 68, 66, 64, 62, 64, 66] },
+  { name: 'Vaca',    color: '#EF5350', data: [36, 37, 38, 40, 41, 42, 43, 42, 41, 40, 41, 43] },
+  { name: 'Toro',    color: '#C8A94E', data: [42, 43, 44, 46, 47, 48, 50, 49, 48, 46, 48, 50] },
+];
+
+let hiddenSeries = new Set();
+
+function toggleTrendSeries(name) {
+  if (hiddenSeries.has(name)) hiddenSeries.delete(name);
+  else hiddenSeries.add(name);
+  renderTrendChart();
+}
+
+function renderTrendChart() {
+  const wrap = document.getElementById('trend-chart');
+  const legendEl = document.getElementById('trend-legend');
+  if (!wrap) return;
+
+  const W = 780, H = 280;
+  const pad = { top: 20, right: 20, bottom: 40, left: 50 };
+  const cw = W - pad.left - pad.right;
+  const ch = H - pad.top - pad.bottom;
+
+  // Find min/max across visible series
+  let allVals = [];
+  trendData.forEach(s => {
+    if (!hiddenSeries.has(s.name)) allVals.push(...s.data);
+  });
+  if (allVals.length === 0) allVals = [0, 100];
+  const minV = Math.floor(Math.min(...allVals) / 10) * 10 - 5;
+  const maxV = Math.ceil(Math.max(...allVals) / 10) * 10 + 5;
+  const rangeV = maxV - minV;
+
+  const xStep = cw / (trendMonths.length - 1);
+  const toX = i => pad.left + i * xStep;
+  const toY = v => pad.top + ch - ((v - minV) / rangeV) * ch;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;height:auto;" xmlns="http://www.w3.org/2000/svg">`;
+
+  // Grid lines
+  const gridSteps = 5;
+  for (let i = 0; i <= gridSteps; i++) {
+    const val = minV + (rangeV / gridSteps) * i;
+    const y = toY(val);
+    svg += `<line x1="${pad.left}" y1="${y}" x2="${W-pad.right}" y2="${y}" stroke="rgba(30,58,30,0.4)" stroke-width="0.5"/>`;
+    svg += `<text x="${pad.left-8}" y="${y+4}" fill="#5a6a4e" font-size="10" text-anchor="end" font-family="'R4P Heading',sans-serif">$${Math.round(val)}</text>`;
+  }
+
+  // Month labels
+  trendMonths.forEach((m, i) => {
+    svg += `<text x="${toX(i)}" y="${H-8}" fill="#5a6a4e" font-size="10" text-anchor="middle" font-family="'R4P Heading',sans-serif">${m}</text>`;
+    svg += `<line x1="${toX(i)}" y1="${pad.top}" x2="${toX(i)}" y2="${pad.top+ch}" stroke="rgba(30,58,30,0.2)" stroke-width="0.5"/>`;
+  });
+
+  // Draw lines + dots
+  trendData.forEach(series => {
+    if (hiddenSeries.has(series.name)) return;
+    // Area fill
+    let areaPath = `M${toX(0)},${toY(series.data[0])}`;
+    for (let i = 1; i < series.data.length; i++) {
+      const cx1 = toX(i-1) + xStep*0.4;
+      const cx2 = toX(i) - xStep*0.4;
+      areaPath += ` C${cx1},${toY(series.data[i-1])} ${cx2},${toY(series.data[i])} ${toX(i)},${toY(series.data[i])}`;
+    }
+    areaPath += ` L${toX(series.data.length-1)},${pad.top+ch} L${toX(0)},${pad.top+ch} Z`;
+    svg += `<path d="${areaPath}" fill="${series.color}" opacity="0.06"/>`;
+
+    // Line
+    let linePath = `M${toX(0)},${toY(series.data[0])}`;
+    for (let i = 1; i < series.data.length; i++) {
+      const cx1 = toX(i-1) + xStep*0.4;
+      const cx2 = toX(i) - xStep*0.4;
+      linePath += ` C${cx1},${toY(series.data[i-1])} ${cx2},${toY(series.data[i])} ${toX(i)},${toY(series.data[i])}`;
+    }
+    svg += `<path d="${linePath}" fill="none" stroke="${series.color}" stroke-width="2.5" stroke-linecap="round"/>`;
+
+    // Dots
+    series.data.forEach((v, i) => {
+      svg += `<circle cx="${toX(i)}" cy="${toY(v)}" r="3.5" fill="${series.color}" stroke="#0B1208" stroke-width="1.5"/>`;
+      // Value label on last point
+      if (i === series.data.length - 1) {
+        svg += `<text x="${toX(i)+8}" y="${toY(v)+4}" fill="${series.color}" font-size="10" font-weight="700" font-family="'R4P Heading',sans-serif">$${v}</text>`;
+      }
+    });
+  });
+
+  svg += '</svg>';
+  wrap.innerHTML = svg;
+
+  // Legend
+  if (legendEl) {
+    legendEl.innerHTML = trendData.map(s => {
+      const muted = hiddenSeries.has(s.name) ? 'muted' : '';
+      return `<div class="trend-legend-item ${muted}" onclick="toggleTrendSeries('${s.name}')">
+        <div class="legend-line" style="background:${s.color};"></div>
+        <span>${s.name}</span>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ========================================================
 // INITIALIZE
 // ========================================================
 renderCBOT();
 renderMXCattle();
 renderPecuarios();
+renderTrendChart();
 setInterval(updateCountdown, 1000);
 updateCountdown();
 setInterval(renderCBOT, 300000);
