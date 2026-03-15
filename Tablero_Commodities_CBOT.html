@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R4P MX | Tablero de Commodities y Ganado</title>
+<style>
+  @font-face {
+    font-family: 'R4P Heading';
+    src: local('Montserrat'), local('Arial Black'), local('Helvetica Neue Bold');
+    font-weight: 400 800;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'R4P Body';
+    src: local('Source Sans 3'), local('Source Sans Pro'), local('Segoe UI'), local('Helvetica Neue'), local('Arial');
+    font-weight: 400 600;
+    font-display: swap;
+  }
+
+  :root {
+    --r4p-primary: #1B5E20;
+    --r4p-secondary: #2E7D32;
+    --r4p-accent: #C8A94E;
+    --r4p-warm: #8D6E4C;
+    --r4p-light: #F5F0E6;
+    --r4p-dark: #0B1208;
+    --r4p-card: #131D10;
+    --r4p-card-border: #1E3A1E;
+    --r4p-text: #E8E2D6;
+    --r4p-muted: #7A8A6E;
+    --r4p-up: #4CAF50;
+    --r4p-down: #EF5350;
+    --r4p-flat: #C8A94E;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'R4P Body', 'Segoe UI', Arial, sans-serif;
+    background: var(--r4p-dark);
+    color: var(--r4p-text);
+    min-height: 100vh;
+  }
+
+  /* === HEADER === */
+  .header {
+    background: linear-gradient(135deg, #061006 0%, #143A14 40%, #1B5E20 60%, #143A14 80%, #061006 100%);
+    padding: 0;
+    border-bottom: 2px solid var(--r4p-accent);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(120deg, transparent, transparent 60px, rgba(200,169,78,0.02) 60px, rgba(200,169,78,0.02) 120px);
+    pointer-events: none;
+  }
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 32px;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+    max-width: 1480px;
+    margin: 0 auto;
+  }
+  .brand-block { display: flex; align-items: center; gap: 16px; }
+  .brand-logo {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #C8A94E, #A68A30);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 800; color: #0B1208;
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    box-shadow: 0 4px 16px rgba(200,169,78,0.25);
+    flex-shrink: 0; letter-spacing: -0.5px;
+  }
+  .brand-text h1 {
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 1.35rem; font-weight: 800; color: var(--r4p-light);
+    letter-spacing: 2.5px; text-transform: uppercase;
+  }
+  .brand-text h1 span { color: var(--r4p-accent); }
+  .brand-text .subtitle { font-size: 0.75rem; color: var(--r4p-muted); margin-top: 3px; letter-spacing: 0.5px; }
+  .header-right { text-align: right; }
+  .header-right .update-time { font-size: 0.78rem; color: var(--r4p-muted); }
+  .header-right .tagline {
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 0.62rem; color: var(--r4p-accent); margin-top: 5px;
+    letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.65;
+  }
+
+  /* === STATUS BAR === */
+  .status-bar {
+    background: #070D06; padding: 8px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.75rem; color: var(--r4p-muted);
+    border-bottom: 1px solid rgba(30,58,30,0.5);
+    max-width: 1480px; margin: 0 auto;
+  }
+  .status-left { display: flex; align-items: center; gap: 8px; }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--r4p-up);
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
+    50% { opacity: 0.5; box-shadow: 0 0 8px 2px rgba(76,175,80,0.2); }
+  }
+  .countdown { font-family: 'R4P Heading', monospace; color: var(--r4p-accent); font-weight: 600; font-size: 0.78rem; }
+
+  /* === CONTAINER === */
+  .container { max-width: 1480px; margin: 0 auto; padding: 20px 32px; }
+
+  /* === TABS === */
+  .tab-bar {
+    display: flex; gap: 4px; margin: 12px 0 20px; flex-wrap: wrap;
+    background: rgba(19,29,16,0.6); padding: 5px; border-radius: 10px;
+    border: 1px solid rgba(30,58,30,0.4);
+  }
+  .tab {
+    padding: 8px 20px; border-radius: 7px; font-size: 0.75rem;
+    font-family: 'R4P Heading', 'Arial Black', sans-serif; font-weight: 600;
+    cursor: pointer; border: none; background: transparent; color: var(--r4p-muted);
+    transition: all 0.2s ease; letter-spacing: 0.8px; text-transform: uppercase;
+  }
+  .tab:hover { background: rgba(46,125,50,0.15); color: var(--r4p-up); }
+  .tab.active {
+    background: linear-gradient(135deg, #1B5E20, #2E7D32); color: #fff;
+    box-shadow: 0 2px 8px rgba(27,94,32,0.3);
+  }
+  .tab.tab-ganado { color: var(--r4p-accent); }
+  .tab.tab-ganado:hover { background: rgba(200,169,78,0.1); }
+  .tab.tab-ganado.active {
+    background: linear-gradient(135deg, #5D4E1F, #8D6E4C); color: #fff;
+    box-shadow: 0 2px 8px rgba(200,169,78,0.25);
+  }
+  .tab.tab-pecuarios { color: #CE93D8; }
+  .tab.tab-pecuarios:hover { background: rgba(206,147,216,0.1); }
+  .tab.tab-pecuarios.active {
+    background: linear-gradient(135deg, #6A3880, #9C27B0); color: #fff;
+    box-shadow: 0 2px 8px rgba(156,39,176,0.25);
+  }
+
+  /* === SECTION TITLES === */
+  .section-title {
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 0.88rem; font-weight: 700; color: var(--r4p-muted);
+    margin: 28px 0 16px 0; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(30,58,30,0.5);
+    display: flex; align-items: center; gap: 10px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .section-title .icon { font-size: 1rem; }
+  .section-title .accent { color: var(--r4p-accent); font-weight: 800; }
+
+  /* === STATE HEADER === */
+  .state-header {
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 0.82rem; font-weight: 700; margin: 22px 0 12px 0;
+    padding: 10px 16px; border-radius: 8px;
+    letter-spacing: 1px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
+    border-left: 4px solid;
+  }
+
+  /* === COMMODITY CARDS === */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+    gap: 12px;
+  }
+  .card {
+    background: linear-gradient(160deg, #141F11 0%, #111A0E 100%);
+    border: 1px solid rgba(30,58,30,0.6); border-radius: 10px;
+    padding: 18px; transition: all 0.25s ease; cursor: default;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(ellipse at top right, rgba(200,169,78,0.03), transparent 70%);
+    pointer-events: none;
+  }
+  .card:hover {
+    border-color: rgba(46,125,50,0.5); transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+  }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .card-name {
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 0.8rem; color: var(--r4p-muted); font-weight: 600; line-height: 1.3;
+  }
+  .card-symbol {
+    font-family: 'R4P Heading', monospace; font-size: 0.65rem; color: var(--r4p-accent);
+    background: rgba(200,169,78,0.08); border: 1px solid rgba(200,169,78,0.15);
+    padding: 3px 9px; border-radius: 5px; font-weight: 700; letter-spacing: 0.5px; white-space: nowrap;
+  }
+  .card-price {
+    font-size: 1.7rem; font-weight: 800; margin: 6px 0 2px;
+    font-family: 'R4P Heading', 'Arial Black', sans-serif; letter-spacing: -0.5px;
+  }
+  .card-unit { font-size: 0.65rem; color: #5a6a4e; margin-bottom: 8px; }
+  .card-mxn {
+    font-size: 0.72rem; color: var(--r4p-accent); font-weight: 700;
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    margin: 2px 0 4px; opacity: 0.85;
+  }
+  .card-change { display: flex; gap: 10px; font-size: 0.76rem; align-items: center; }
+  .change-val { font-weight: 700; }
+  .up { color: var(--r4p-up); }
+  .down { color: var(--r4p-down); }
+  .flat { color: var(--r4p-flat); }
+  .card-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; }
+  .card-bar.up { background: linear-gradient(90deg, transparent, var(--r4p-up)); }
+  .card-bar.down { background: linear-gradient(90deg, transparent, var(--r4p-down)); }
+  .card-bar.flat { background: linear-gradient(90deg, transparent, var(--r4p-flat)); }
+
+  /* === MINI CHARTS === */
+  .mini-chart { height: 32px; margin: 10px 0 6px; display: flex; align-items: flex-end; gap: 2px; }
+  .mini-bar {
+    flex: 1; border-radius: 2px 2px 0 0; min-height: 3px; opacity: 0.35; transition: opacity 0.3s;
+  }
+  .card:hover .mini-bar, .mx-card:hover .mini-bar { opacity: 0.85; }
+  .range-row {
+    display: flex; justify-content: space-between; font-size: 0.63rem; color: #4a5a3e;
+    margin-top: 5px; font-family: 'R4P Heading', 'Arial Black', sans-serif; letter-spacing: 0.3px;
+  }
+
+  /* === MEXICAN CATTLE CARDS === */
+  .mx-card {
+    background: linear-gradient(160deg, #181810 0%, #131D10 100%);
+    border: 1px solid rgba(42,53,32,0.7); border-radius: 10px; padding: 18px;
+    position: relative; overflow: hidden; transition: all 0.25s ease;
+  }
+  .mx-card::before {
+    content: ''; position: absolute; top: 0; right: 0; width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(200,169,78,0.04), transparent 70%); pointer-events: none;
+  }
+  .mx-card:hover {
+    border-color: rgba(200,169,78,0.35); transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+  }
+  .mx-card .plaza-badge {
+    display: inline-block; font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 0.58rem; padding: 3px 10px; border-radius: 5px; font-weight: 700;
+    margin-bottom: 10px; letter-spacing: 0.8px; text-transform: uppercase;
+  }
+  .mx-card .card-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; }
+
+  /* === PECUARIOS CARD (new) === */
+  .pec-card {
+    background: linear-gradient(160deg, #1A1320 0%, #151020 100%);
+    border: 1px solid rgba(80,40,100,0.4); border-radius: 10px; padding: 18px;
+    position: relative; overflow: hidden; transition: all 0.25s ease;
+  }
+  .pec-card::before {
+    content: ''; position: absolute; top: 0; right: 0; width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(206,147,216,0.04), transparent 70%); pointer-events: none;
+  }
+  .pec-card:hover {
+    border-color: rgba(206,147,216,0.35); transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+  }
+  .pec-card .pec-badge {
+    display: inline-block; font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 0.58rem; padding: 3px 10px; border-radius: 5px; font-weight: 700;
+    margin-bottom: 10px; letter-spacing: 0.8px; text-transform: uppercase;
+  }
+  .pec-card .card-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; }
+
+  /* === CONTEXT / HISTORY === */
+  .context-section {
+    margin-top: 24px; padding: 20px;
+    background: linear-gradient(160deg, #0E150C 0%, #111A0E 100%);
+    border: 1px solid rgba(30,58,30,0.5); border-radius: 10px;
+  }
+  .context-title {
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 0.78rem; color: var(--r4p-accent); font-weight: 700;
+    margin-bottom: 14px; letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .ctx-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .ctx-card {
+    background: rgba(19,29,16,0.8); border: 1px solid rgba(30,58,30,0.4);
+    border-radius: 8px; padding: 14px; transition: border-color 0.2s;
+  }
+  .ctx-card:hover { border-color: rgba(200,169,78,0.25); }
+  .ctx-card .ctx-label {
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 0.62rem; color: var(--r4p-muted); margin-bottom: 5px;
+    text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600;
+  }
+  .ctx-card .ctx-value { font-size: 1.15rem; font-weight: 800; font-family: 'R4P Heading', 'Arial Black', sans-serif; }
+  .ctx-card .ctx-note { font-size: 0.62rem; color: #4a5a3e; margin-top: 4px; line-height: 1.4; }
+
+  .history-section {
+    margin-top: 16px; padding: 18px; background: var(--r4p-card);
+    border: 1px solid rgba(30,58,30,0.5); border-radius: 10px;
+  }
+  .history-bar {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: flex-end; cursor: default; transition: transform 0.2s;
+  }
+  .history-bar:hover { transform: scale(1.05); }
+  .history-bar .bar-val {
+    font-family: 'R4P Heading', 'Arial Black', sans-serif;
+    font-size: 0.65rem; color: var(--r4p-accent); font-weight: 700; margin-bottom: 5px;
+  }
+  .history-bar .bar-fill {
+    width: 100%; border-radius: 4px 4px 0 0; min-height: 4px; transition: height 0.5s ease;
+  }
+
+  .sources-text { margin-top: 12px; font-size: 0.63rem; color: #3a4a2e; text-align: center; letter-spacing: 0.3px; }
+
+  /* === FOOTER === */
+  .footer {
+    text-align: center; padding: 28px 32px; color: #3a4a2e; font-size: 0.68rem;
+    border-top: 1px solid rgba(30,58,30,0.4); margin-top: 40px; background: #070D06;
+  }
+  .footer .brand-footer {
+    font-family: 'R4P Heading', 'Arial Black', sans-serif; font-weight: 700;
+    color: var(--r4p-accent); letter-spacing: 2px; font-size: 0.75rem; margin-top: 10px; opacity: 0.8;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    .brand-text h1 { font-size: 1rem; letter-spacing: 1px; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .container { padding: 12px 14px; }
+    .header-inner { padding: 14px 16px; }
+    .brand-logo { width: 42px; height: 42px; font-size: 0.85rem; border-radius: 8px; }
+    .tab { padding: 6px 12px; font-size: 0.68rem; }
+    .tab-bar { padding: 4px; }
+    .status-bar { padding: 6px 14px; font-size: 0.68rem; }
+    .card, .mx-card, .pec-card { padding: 14px; }
+    .card-price { font-size: 1.3rem; }
+    .ctx-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+    .ctx-grid { grid-template-columns: 1fr; }
+    .header-right { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="brand-block">
+      <div class="brand-logo">R4P</div>
+      <div class="brand-text">
+        <h1>Ranching <span>4</span> Profit <span>MX</span></h1>
+        <div class="subtitle">Tablero de Commodities Agricolas | CBOT / CME + Subastas MX</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="update-time" id="lastUpdate">Cargando...</div>
+      <div class="tagline">Mejores Tierras &middot; Mejores Finanzas &middot; Mejor Vida</div>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="status-left"><span class="status-dot"></span> Datos referenciales &mdash; fuentes publicas con retraso</div>
+  <div>Proxima actualizacion: <span class="countdown" id="countdown">--:--:--</span></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <div class="tab active" onclick="filterSection('all')">Todos</div>
+    <div class="tab" onclick="filterSection('granos')">Granos y Oleaginosas</div>
+    <div class="tab tab-ganado" onclick="filterSection('ganado')">Ganado Bovino</div>
+    <div class="tab tab-pecuarios" onclick="filterSection('pecuarios')">Otros Pecuarios</div>
+    <div class="tab" onclick="filterSection('otros')">Otros Commodities</div>
+  </div>
+
+  <!-- ===== SECTION 1: GRANOS Y OLEAGINOSAS ===== -->
+  <div id="granos-section" class="data-section">
+    <div class="section-title"><span class="icon">🌾</span> <span class="accent">Granos</span></div>
+    <div class="grid" id="granos-grid"></div>
+    <div class="section-title" style="margin-top:24px;"><span class="icon">🫘</span> <span class="accent">Oleaginosas</span></div>
+    <div class="grid" id="oleaginosas-grid"></div>
+  </div>
+
+  <!-- ===== SECTION 2: TODO EL GANADO BOVINO (CME + MX por estado) ===== -->
+  <div id="ganado-section" class="data-section">
+    <div class="section-title"><span class="icon">🐄</span> <span class="accent">Ganado Bovino</span> (CME Futures)</div>
+    <div class="grid" id="ganado-cme-grid"></div>
+
+    <div class="section-title" style="margin-top:30px;border-bottom-color:rgba(200,169,78,0.2);">
+      <span class="icon">🇲🇽</span> <span class="accent">Ganado Bovino Mexicano</span> &mdash; Subastas Regionales (MXN $/kg en pie)
+    </div>
+    <div id="ganadomx-grid"></div>
+
+    <!-- CONTEXT -->
+    <div class="context-section">
+      <div class="context-title">Contexto del Mercado Ganadero Mexicano</div>
+      <div class="ctx-grid" id="mx-context-cards"></div>
+    </div>
+
+    <!-- HISTORY CHART -->
+    <div class="history-section">
+      <div class="context-title" style="font-size:0.72rem;">Historico Precio Promedio Becerro ($/kg) &mdash; Ultimos 6 Anos</div>
+      <div id="mx-history-chart" style="display:flex;align-items:flex-end;gap:10px;height:150px;padding:12px 0;"></div>
+      <div style="display:flex;justify-content:space-around;font-family:'R4P Heading',sans-serif;font-size:0.68rem;color:var(--r4p-muted);margin-top:6px;" id="mx-history-labels"></div>
+    </div>
+
+    <div class="sources-text">
+      Fuentes: UGRS, UGRCH, AGL Cusi, UGRJ, Subasta Ganadera NL, AGL Durango, UGRT, SNIIM, USDA/AMS, Mexico Ganadero
+    </div>
+  </div>
+
+  <!-- ===== SECTION 3: OTROS PECUARIOS ===== -->
+  <div id="pecuarios-section" class="data-section">
+    <div class="section-title"><span class="icon">🐷</span> <span class="accent">Otros Pecuarios</span> &mdash; Leche, Huevo, Cerdo, Ovino, Caprino</div>
+    <div id="pecuarios-grid"></div>
+
+    <div class="context-section" style="margin-top:20px;background:linear-gradient(160deg, #120E18 0%, #110E16 100%);border-color:rgba(80,40,100,0.3);">
+      <div class="context-title" style="color:#CE93D8;">Fuentes de Actualizacion Periodica</div>
+      <div class="ctx-grid" id="pecuarios-fuentes"></div>
+    </div>
+  </div>
+
+  <!-- ===== SECTION 4: OTROS COMMODITIES ===== -->
+  <div id="otros-section" class="data-section">
+    <div class="section-title"><span class="icon">📦</span> <span class="accent">Otros</span> Commodities Agricolas</div>
+    <div class="grid" id="otros-grid"></div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>Los precios mostrados son referenciales con retraso. No constituyen asesoramiento financiero.</p>
+  <p style="margin-top:4px;">Fuentes: CME Group, Yahoo Finance, SNIIM, UGRS, UGRCH, AGL Cusi, UGRJ, AGL Durango, UGRT, USDA/AMS, Porcicultura.com, UNA, SIAP</p>
+  <div class="brand-footer">RANCHING 4 PROFIT MX &copy; 2026</div>
+</div>
+
+<script>
+// ========================================================
+// CBOT COMMODITY DEFINITIONS
+// ========================================================
+const commodities = {
+  granos: [
+    { name: "Maiz (Corn)", symbol: "ZC", unit: "USD cents/bushel", ySymbol: "ZC=F", decimals: 2, convNote: "1 bushel = 25.4 kg" },
+    { name: "Trigo SRW (Wheat)", symbol: "ZW", unit: "USD cents/bushel", ySymbol: "ZW=F", decimals: 2, convNote: "Soft Red Winter" },
+    { name: "Trigo HRW (KC Wheat)", symbol: "KE", unit: "USD cents/bushel", ySymbol: "KE=F", decimals: 2, convNote: "Hard Red Winter" },
+    { name: "Trigo HRS (Mpls)", symbol: "MW", unit: "USD cents/bushel", ySymbol: "MW=F", decimals: 2, convNote: "Hard Red Spring" },
+    { name: "Sorgo (Grain Sorghum)", symbol: "SGG", unit: "USD/cwt", ySymbol: "SGG=F", decimals: 2, convNote: "Ref. USDA/CBOT" },
+    { name: "Avena (Oats)", symbol: "ZO", unit: "USD cents/bushel", ySymbol: "ZO=F", decimals: 2, convNote: "1 bushel = 14.5 kg" },
+    { name: "Arroz (Rough Rice)", symbol: "ZR", unit: "USD/cwt", ySymbol: "ZR=F", decimals: 3, convNote: "1 cwt = 45.36 kg" },
+  ],
+  oleaginosas: [
+    { name: "Soya (Soybeans)", symbol: "ZS", unit: "USD cents/bushel", ySymbol: "ZS=F", decimals: 2, convNote: "1 bushel = 27.2 kg" },
+    { name: "Aceite de Soya", symbol: "ZL", unit: "USD cents/lb", ySymbol: "ZL=F", decimals: 2, convNote: "Soybean Oil" },
+    { name: "Harina de Soya", symbol: "ZM", unit: "USD/short ton", ySymbol: "ZM=F", decimals: 1, convNote: "Soybean Meal" },
+    { name: "Canola (Colza)", symbol: "RS", unit: "CAD/tonne", ySymbol: "RS=F", decimals: 2, convNote: "ICE Futures Canada" },
+    { name: "Aceite de Palma", symbol: "KPO", unit: "MYR/tonne", ySymbol: "KPO=F", decimals: 0, convNote: "Bursa Malaysia" },
+  ],
+  ganadoCME: [
+    { name: "Ganado en Pie (Live Cattle)", symbol: "LE", unit: "USD cents/lb", ySymbol: "LE=F", decimals: 3, convNote: "1 lb = 0.4536 kg" },
+    { name: "Ganado de Engorda (Feeder)", symbol: "GF", unit: "USD cents/lb", ySymbol: "GF=F", decimals: 3, convNote: "1 lb = 0.4536 kg" },
+    { name: "Cerdo en Pie (Lean Hogs)", symbol: "HE", unit: "USD cents/lb", ySymbol: "HE=F", decimals: 3, convNote: "1 lb = 0.4536 kg" },
+    { name: "Leche Clase III (CME)", symbol: "DC", unit: "USD/cwt", ySymbol: "DC=F", decimals: 2, convNote: "CME Class III Milk" },
+  ],
+  otros: [
+    { name: "Algodon (Cotton)", symbol: "CT", unit: "USD cents/lb", ySymbol: "CT=F", decimals: 2, convNote: "ICE Futures US" },
+    { name: "Azucar (Sugar #11)", symbol: "SB", unit: "USD cents/lb", ySymbol: "SB=F", decimals: 2, convNote: "ICE Futures US" },
+    { name: "Cafe (Coffee C)", symbol: "KC", unit: "USD cents/lb", ySymbol: "KC=F", decimals: 2, convNote: "ICE Futures US" },
+    { name: "Cacao (Cocoa)", symbol: "CC", unit: "USD/metric ton", ySymbol: "CC=F", decimals: 0, convNote: "ICE Futures US" },
+    { name: "Jugo de Naranja (FCOJ)", symbol: "OJ", unit: "USD cents/lb", ySymbol: "OJ=F", decimals: 2, convNote: "ICE Futures US" },
+    { name: "Caucho (Rubber)", symbol: "TF", unit: "JPY/kg", ySymbol: "TF=F", decimals: 1, convNote: "OSE Osaka" },
+    { name: "Etanol", symbol: "EH", unit: "USD/gallon", ySymbol: "EH=F", decimals: 3, convNote: "CBOT Denatured" },
+    { name: "Madera (Lumber)", symbol: "LBS", unit: "USD/1000 bd ft", ySymbol: "LBS=F", decimals: 2, convNote: "Random Length" },
+  ]
+};
+
+// ========================================================
+// CBOT PRICES — Updated March 14, 2026
+// ========================================================
+const referencePrices = {
+  'ZC=F': { price: 452.50, prev: 448.75, low52: 380.00, high52: 520.00 },
+  'ZW=F': { price: 618.50, prev: 612.00, low52: 475.00, high52: 680.00 },
+  'KE=F': { price: 635.25, prev: 628.50, low52: 495.00, high52: 710.00 },
+  'ZO=F': { price: 355.00, prev: 358.25, low52: 285.00, high52: 425.00 },
+  'ZR=F': { price: 14.350, prev: 14.280, low52: 12.200, high52: 18.500 },
+  'ZS=F': { price: 1211.00, prev: 1205.50, low52: 910.00, high52: 1280.00 },
+  'ZL=F': { price: 59.70, prev: 60.15, low52: 38.00, high52: 67.80 },
+  'ZM=F': { price: 316.00, prev: 312.50, low52: 268.00, high52: 365.00 },
+  'RS=F': { price: 638.40, prev: 634.60, low52: 555.00, high52: 720.00 },
+  'LE=F': { price: 233.100, prev: 231.450, low52: 175.000, high52: 240.000 },
+  'GF=F': { price: 353.325, prev: 349.800, low52: 235.000, high52: 360.000 },
+  'HE=F': { price: 95.575, prev: 96.100, low52: 72.000, high52: 108.000 },
+  'DC=F': { price: 19.45, prev: 19.30, low52: 15.80, high52: 23.50 },
+  'CT=F': { price: 64.27, prev: 64.85, low52: 58.00, high52: 96.00 },
+  'SB=F': { price: 14.08, prev: 13.95, low52: 12.50, high52: 27.50 },
+  'KC=F': { price: 345.60, prev: 360.50, low52: 175.00, high52: 425.00 },
+  'CC=F': { price: 7850, prev: 8050, low52: 4500, high52: 12800 },
+  'LBS=F': { price: 555.00, prev: 550.00, low52: 420.00, high52: 630.00 },
+  'MW=F': { price: 643.00, prev: 619.50, low52: 540.00, high52: 720.00 },
+  'SGG=F': { price: 10.85, prev: 10.70, low52: 8.50, high52: 13.50 },
+  'KPO=F': { price: 4280, prev: 4310, low52: 3400, high52: 4900 },
+  'OJ=F': { price: 199.95, prev: 210.50, low52: 150.00, high52: 520.00 },
+  'TF=F': { price: 375.0, prev: 370.5, low52: 280.0, high52: 420.0 },
+  'EH=F': { price: 1.825, prev: 1.790, low52: 1.380, high52: 2.200 },
+};
+
+function getSimulatedPrice(sym) {
+  const ref = referencePrices[sym];
+  if (!ref) return null;
+  const v = (Math.random() - 0.5) * 0.004 * ref.price;
+  const pv = (Math.random() - 0.5) * 0.002 * ref.prev;
+  return { price: ref.price + v, previousClose: ref.prev + pv, low52: ref.low52, high52: ref.high52 };
+}
+
+function generateMiniChart(currentPrice, low52, high52) {
+  const bars = 14, range = high52 - low52;
+  const baseHeight = ((currentPrice - low52) / range) * 100;
+  let data = [];
+  for (let i = 0; i < bars; i++) {
+    const drift = (i - bars/2) * (Math.random() * 1.8);
+    data.push(Math.max(8, Math.min(95, baseHeight + drift + (Math.random()-0.5)*14)));
+  }
+  return data;
+}
+
+// Tipo de cambio MXN/USD para conversiones
+const TC_MXN = 17.95;
+
+// Conversion factors to get MXN/kg equivalent
+// Each commodity unit needs different math to become MXN per kg
+function getMXNperKg(commodity, priceValue) {
+  const sym = commodity.symbol;
+  const p = priceValue;
+  // Grains: USD cents/bushel -> USD/bushel -> USD/kg -> MXN/kg
+  if (sym === 'ZC') return (p / 100) / 25.4 * TC_MXN;       // Maiz: 1 bu = 25.4 kg
+  if (sym === 'ZW' || sym === 'KE' || sym === 'MW') return (p / 100) / 27.2 * TC_MXN; // Trigo: 1 bu = 27.2 kg
+  if (sym === 'SGG') return p / 45.36 * TC_MXN;            // Sorgo: USD/cwt -> MXN/kg
+  if (sym === 'ZO') return (p / 100) / 14.5 * TC_MXN;     // Avena: 1 bu = 14.5 kg
+  if (sym === 'ZR') return p / 45.36 * TC_MXN;             // Arroz: USD/cwt, 1 cwt = 45.36 kg
+  if (sym === 'ZS') return (p / 100) / 27.2 * TC_MXN;     // Soya: 1 bu = 27.2 kg
+  if (sym === 'ZL') return (p / 100) / 0.4536 * TC_MXN;   // Aceite soya: cents/lb -> USD/kg
+  if (sym === 'ZM') return p / 907.185 * TC_MXN;           // Harina soya: USD/short ton -> USD/kg
+  if (sym === 'RS') return p / 1000 * TC_MXN * 0.75;       // Canola: CAD/tonne, ~0.75 USD/CAD
+  if (sym === 'KPO') return p / 1000 * TC_MXN * 0.22;     // Palma: MYR/tonne, ~0.22 USD/MYR -> MXN/kg
+  // Livestock: USD cents/lb -> USD/kg -> MXN/kg
+  if (sym === 'LE' || sym === 'GF' || sym === 'HE') return (p / 100) / 0.4536 * TC_MXN;
+  if (sym === 'DC') return p / 45.36 * TC_MXN;             // Leche: USD/cwt -> MXN/kg (~litro)
+  // Softs
+  if (sym === 'CT' || sym === 'SB') return (p / 100) / 0.4536 * TC_MXN; // cents/lb
+  if (sym === 'KC') return (p / 100) / 0.4536 * TC_MXN;   // Cafe: cents/lb
+  if (sym === 'OJ') return (p / 100) / 0.4536 * TC_MXN;   // Jugo naranja: cents/lb -> MXN/kg
+  if (sym === 'CC') return p / 1000 * TC_MXN;              // Cacao: USD/metric ton -> MXN/kg
+  if (sym === 'TF') return p * TC_MXN / 150;               // Caucho: JPY/kg, ~150 JPY/USD -> MXN/kg
+  if (sym === 'EH') return p / 3.785 * TC_MXN;             // Etanol: USD/gal -> USD/litro -> MXN/litro
+  if (sym === 'LBS') return p / 1000 * TC_MXN;             // Madera: USD/1000 bd ft (aprox)
+  return null;
+}
+
+function createCard(commodity, data) {
+  if (!data) return '';
+  const change = data.price - data.previousClose;
+  const changePct = (change / data.previousClose) * 100;
+  const direction = change > 0.001 ? 'up' : change < -0.001 ? 'down' : 'flat';
+  const arrow = direction === 'up' ? '▲' : direction === 'down' ? '▼' : '■';
+  const chartData = generateMiniChart(data.price, data.low52, data.high52);
+  const colors = { up: '#4CAF50', down: '#EF5350', flat: '#C8A94E' };
+  const barColor = colors[direction];
+  let chartHtml = '<div class="mini-chart">';
+  chartData.forEach(h => { chartHtml += `<div class="mini-bar" style="height:${h}%;background:${barColor}"></div>`; });
+  chartHtml += '</div>';
+
+  // MXN equivalent per kg
+  const mxnKg = getMXNperKg(commodity, data.price);
+  const mxnHtml = mxnKg !== null
+    ? `<div class="card-mxn">≈ $${mxnKg.toFixed(2)} MXN/kg <span style="font-size:0.58rem;font-weight:400;opacity:0.6;">(TC $${TC_MXN})</span></div>`
+    : '';
+
+  return `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-name">${commodity.name}</div>
+        <div class="card-symbol">${commodity.symbol}</div>
+      </div>
+      <div class="card-price ${direction}">${data.price.toFixed(commodity.decimals)}</div>
+      ${mxnHtml}
+      <div class="card-unit">${commodity.unit} | ${commodity.convNote}</div>
+      ${chartHtml}
+      <div class="card-change">
+        <span class="change-val ${direction}">${arrow} ${change >= 0 ? '+' : ''}${change.toFixed(commodity.decimals)}</span>
+        <span class="${direction}">(${changePct >= 0 ? '+' : ''}${changePct.toFixed(2)}%)</span>
+      </div>
+      <div class="range-row">
+        <span>52s Min: ${data.low52.toFixed(commodity.decimals > 2 ? 2 : commodity.decimals)}</span>
+        <span>52s Max: ${data.high52.toFixed(commodity.decimals > 2 ? 2 : commodity.decimals)}</span>
+      </div>
+      <div class="card-bar ${direction}"></div>
+    </div>`;
+}
+
+function renderCBOT() {
+  ['granos','oleaginosas','otros'].forEach(section => {
+    const grid = document.getElementById(section + '-grid');
+    if (!grid) return;
+    let html = '';
+    commodities[section].forEach(c => { html += createCard(c, getSimulatedPrice(c.ySymbol)); });
+    grid.innerHTML = html;
+  });
+  // CME cattle
+  const cmeGrid = document.getElementById('ganado-cme-grid');
+  if (cmeGrid) {
+    let html = '';
+    commodities.ganadoCME.forEach(c => { html += createCard(c, getSimulatedPrice(c.ySymbol)); });
+    cmeGrid.innerHTML = html;
+  }
+  document.getElementById('lastUpdate').textContent =
+    'Ultima actualizacion: ' + new Date().toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'medium' });
+}
+
+function filterSection(which) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.data-section').forEach(s => {
+    s.style.display = (which === 'all' || s.id === which + '-section') ? '' : 'none';
+  });
+}
+
+function updateCountdown() {
+  const now = new Date();
+  const next = new Date(now);
+  next.setHours(6, 8, 0, 0);
+  if (now >= next) next.setDate(next.getDate() + 1);
+  const diff = next - now;
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('countdown').textContent =
+    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+// ========================================================
+// GANADO MEXICANO — Grouped by State
+// ========================================================
+const stateConfig = {
+  "Sonora": { color: "#C8A94E", bg: "rgba(200,169,78,0.06)", borderLeft: "#C8A94E" },
+  "Chihuahua": { color: "#81C784", bg: "rgba(129,199,132,0.05)", borderLeft: "#66BB6A" },
+  "Chihuahua (Cusi)": { color: "#A5D6A7", bg: "rgba(165,214,167,0.05)", borderLeft: "#81C784" },
+  "Nuevo Leon": { color: "#90CAF9", bg: "rgba(144,202,249,0.05)", borderLeft: "#64B5F6" },
+  "Jalisco": { color: "#CE93D8", bg: "rgba(206,147,216,0.05)", borderLeft: "#BA68C8" },
+  "Durango": { color: "#FFB74D", bg: "rgba(255,183,77,0.05)", borderLeft: "#FFA726" },
+  "Tamaulipas": { color: "#4FC3F7", bg: "rgba(79,195,247,0.05)", borderLeft: "#29B6F6" },
+  "Veracruz": { color: "#AED581", bg: "rgba(174,213,129,0.05)", borderLeft: "#8BC34A" },
+  "Tabasco": { color: "#4DB6AC", bg: "rgba(77,182,172,0.05)", borderLeft: "#26A69A" },
+  "Chiapas": { color: "#FF8A65", bg: "rgba(255,138,101,0.05)", borderLeft: "#FF7043" },
+};
+
+const ganadoMX = [
+  // SONORA — UGRS Subasta Semanal
+  /* --- Becerros --- */
+  { state: "Sonora", cat: "Becerro #1 (100-160 kg)", price: 135.00, prev: 128.50, peso: "100-160 kg", fuente: "UGRS Mar 2026", low: 86, high: 145 },
+  { state: "Sonora", cat: "Becerro #1 (160-220 kg)", price: 124.00, prev: 118.00, peso: "160-220 kg", fuente: "UGRS Mar 2026", low: 78, high: 138 },
+  { state: "Sonora", cat: "Becerro #2 (100-180 kg)", price: 105.00, prev: 100.00, peso: "100-180 kg", fuente: "UGRS Mar 2026", low: 62, high: 118 },
+  /* --- Becerras --- */
+  { state: "Sonora", cat: "Becerra #1 (100-160 kg)", price: 110.00, prev: 104.00, peso: "100-160 kg", fuente: "UGRS Mar 2026", low: 68, high: 120 },
+  { state: "Sonora", cat: "Becerra #1 (160-220 kg)", price: 102.00, prev: 96.00, peso: "160-220 kg", fuente: "UGRS Mar 2026", low: 62, high: 112 },
+  { state: "Sonora", cat: "Becerra #2 (100-180 kg)", price: 88.00, prev: 83.00, peso: "100-180 kg", fuente: "UGRS Mar 2026", low: 52, high: 98 },
+  /* --- Toretes y Vaquillas --- */
+  { state: "Sonora", cat: "Torete 220-350 kg", price: 86.00, prev: 83.00, peso: "220-350 kg", fuente: "UGRS Mar 2026", low: 49, high: 95 },
+  { state: "Sonora", cat: "Vaquilla 220-350 kg", price: 82.00, prev: 79.00, peso: "220-350 kg", fuente: "UGRS Mar 2026", low: 50, high: 90 },
+  { state: "Sonora", cat: "Vaquilla #1½", price: 76.00, prev: 73.00, peso: "250-320 kg", fuente: "UGRS Mar 2026", low: 45, high: 85 },
+  /* --- Novillo, Vaca, Toro --- */
+  { state: "Sonora", cat: "Novillo Gordo", price: 66.00, prev: 63.00, peso: "400+ kg", fuente: "UGRS Mar 2026", low: 48, high: 74 },
+  { state: "Sonora", cat: "Vaca Gorda", price: 51.00, prev: 48.00, peso: "400+ kg", fuente: "UGRS Mar 2026", low: 38, high: 56 },
+  { state: "Sonora", cat: "Vaca Delgada / Desecho", price: 34.00, prev: 32.00, peso: "350+ kg", fuente: "UGRS Mar 2026", low: 22, high: 40 },
+  { state: "Sonora", cat: "Toro Gordo", price: 52.00, prev: 49.00, peso: "500+ kg", fuente: "UGRS Mar 2026", low: 38, high: 57 },
+  { state: "Sonora", cat: "Toro Desecho", price: 44.00, prev: 42.00, peso: "500+ kg", fuente: "UGRS Mar 2026", low: 32, high: 49 },
+
+  // CHIHUAHUA
+  /* --- Chihuahua UGRCH Subasta: Becerros --- */
+  { state: "Chihuahua", cat: "Becerro 140-180 kg", price: 120.00, prev: 113.00, peso: "140-180 kg", fuente: "UGRCH Mar 2026", low: 73, high: 142 },
+  { state: "Chihuahua", cat: "Becerro 180-220 kg", price: 112.00, prev: 106.00, peso: "180-220 kg", fuente: "UGRCH Mar 2026", low: 68, high: 135 },
+  { state: "Chihuahua", cat: "Becerro 220-280 kg", price: 103.00, prev: 98.00, peso: "220-280 kg", fuente: "UGRCH Mar 2026", low: 62, high: 125 },
+  { state: "Chihuahua", cat: "Becerro 280-350 kg", price: 95.00, prev: 90.00, peso: "280-350 kg", fuente: "UGRCH Mar 2026", low: 56, high: 115 },
+  /* --- Chihuahua UGRCH Subasta: Becerras --- */
+  { state: "Chihuahua", cat: "Becerra 140-180 kg", price: 102.00, prev: 96.00, peso: "140-180 kg", fuente: "UGRCH Mar 2026", low: 60, high: 118 },
+  { state: "Chihuahua", cat: "Becerra 180-220 kg", price: 95.00, prev: 89.00, peso: "180-220 kg", fuente: "UGRCH Mar 2026", low: 56, high: 110 },
+  { state: "Chihuahua", cat: "Becerra 220-280 kg", price: 88.00, prev: 83.00, peso: "220-280 kg", fuente: "UGRCH Mar 2026", low: 52, high: 102 },
+  /* --- Chihuahua UGRCH Subasta: Toretes y Vaquillas --- */
+  { state: "Chihuahua", cat: "Torete 280-350 kg", price: 90.00, prev: 85.00, peso: "280-350 kg", fuente: "UGRCH Mar 2026", low: 54, high: 102 },
+  { state: "Chihuahua", cat: "Torete 350-400 kg", price: 82.00, prev: 78.00, peso: "350-400 kg", fuente: "UGRCH Mar 2026", low: 50, high: 95 },
+  { state: "Chihuahua", cat: "Vaquilla 280-350 kg", price: 82.00, prev: 78.00, peso: "280-350 kg", fuente: "UGRCH Mar 2026", low: 48, high: 94 },
+  { state: "Chihuahua", cat: "Vaquilla 350-400 kg", price: 74.00, prev: 70.00, peso: "350-400 kg", fuente: "UGRCH Mar 2026", low: 44, high: 86 },
+  /* --- Chihuahua UGRCH Subasta: Novillo, Vaca, Toro --- */
+  { state: "Chihuahua", cat: "Novillo Gordo 400+ kg", price: 68.00, prev: 64.00, peso: "400+ kg", fuente: "UGRCH Mar 2026", low: 48, high: 78 },
+  { state: "Chihuahua", cat: "Vaca Gorda", price: 44.00, prev: 42.00, peso: "400+ kg", fuente: "UGRCH Mar 2026", low: 33, high: 52 },
+  { state: "Chihuahua", cat: "Vaca Flaca / Desecho", price: 32.00, prev: 30.00, peso: "350+ kg", fuente: "UGRCH Mar 2026", low: 22, high: 40 },
+  { state: "Chihuahua", cat: "Toro Gordo", price: 52.00, prev: 49.00, peso: "500+ kg", fuente: "UGRCH Mar 2026", low: 38, high: 58 },
+  { state: "Chihuahua", cat: "Toro Desecho", price: 44.00, prev: 42.00, peso: "500+ kg", fuente: "UGRCH Mar 2026", low: 32, high: 50 },
+  /* --- Chihuahua: Exportación (Sta. Teresa / USDA) --- */
+  { state: "Chihuahua", cat: "Becerro Export (Sta. Teresa)", price: 151.00, prev: 142.00, peso: "220-260 kg", fuente: "USDA/AMS", low: 110, high: 156 },
+  { state: "Chihuahua", cat: "Novillo Export 300-350 kg", price: 117.00, prev: 112.00, peso: "300-350 kg", fuente: "USDA/AMS", low: 80, high: 126 },
+  { state: "Chihuahua", cat: "Novillo Export 360-390 kg", price: 112.00, prev: 107.00, peso: "360-390 kg", fuente: "USDA/AMS", low: 75, high: 120 },
+  { state: "Chihuahua", cat: "Becerra Export 220-270 kg", price: 128.00, prev: 120.00, peso: "220-270 kg", fuente: "USDA/AMS", low: 80, high: 138 },
+  { state: "Chihuahua", cat: "Vaquilla Export 300-320 kg", price: 102.00, prev: 97.00, peso: "300-320 kg", fuente: "USDA/AMS", low: 65, high: 110 },
+
+  // CHIHUAHUA — CUSIHUIRIACHI (AGL Cusi, Cuauhtemoc)
+  /* --- Becerros --- */
+  { state: "Chihuahua (Cusi)", cat: "Becerro 100-160 kg", price: 118.00, prev: 110.00, peso: "100-160 kg", fuente: "AGL Cusi Mar 2026", low: 72, high: 135 },
+  { state: "Chihuahua (Cusi)", cat: "Becerro 160-220 kg", price: 110.00, prev: 104.00, peso: "160-220 kg", fuente: "AGL Cusi Mar 2026", low: 68, high: 128 },
+  { state: "Chihuahua (Cusi)", cat: "Becerro 220-280 kg", price: 100.00, prev: 95.00, peso: "220-280 kg", fuente: "AGL Cusi Mar 2026", low: 60, high: 118 },
+  /* --- Becerras --- */
+  { state: "Chihuahua (Cusi)", cat: "Becerra 100-160 kg", price: 95.00, prev: 88.00, peso: "100-160 kg", fuente: "AGL Cusi Mar 2026", low: 56, high: 108 },
+  { state: "Chihuahua (Cusi)", cat: "Becerra 160-220 kg", price: 90.00, prev: 84.00, peso: "160-220 kg", fuente: "AGL Cusi Mar 2026", low: 52, high: 102 },
+  { state: "Chihuahua (Cusi)", cat: "Becerra 220-280 kg", price: 83.00, prev: 78.00, peso: "220-280 kg", fuente: "AGL Cusi Mar 2026", low: 48, high: 96 },
+  /* --- Toretes y Vaquillas --- */
+  { state: "Chihuahua (Cusi)", cat: "Torete 280-350 kg", price: 88.00, prev: 83.00, peso: "280-350 kg", fuente: "AGL Cusi Mar 2026", low: 52, high: 98 },
+  { state: "Chihuahua (Cusi)", cat: "Torete 350-400 kg", price: 78.00, prev: 74.00, peso: "350-400 kg", fuente: "AGL Cusi Mar 2026", low: 46, high: 88 },
+  { state: "Chihuahua (Cusi)", cat: "Vaquilla 280-350 kg", price: 80.00, prev: 76.00, peso: "280-350 kg", fuente: "AGL Cusi Mar 2026", low: 48, high: 90 },
+  { state: "Chihuahua (Cusi)", cat: "Vaquilla 350-400 kg", price: 72.00, prev: 68.00, peso: "350-400 kg", fuente: "AGL Cusi Mar 2026", low: 42, high: 82 },
+  /* --- Novillo, Vaca, Toro --- */
+  { state: "Chihuahua (Cusi)", cat: "Novillo Gordo 400+ kg", price: 65.00, prev: 62.00, peso: "400+ kg", fuente: "AGL Cusi Mar 2026", low: 45, high: 74 },
+  { state: "Chihuahua (Cusi)", cat: "Vaca Gorda", price: 43.00, prev: 41.00, peso: "400+ kg", fuente: "AGL Cusi Mar 2026", low: 32, high: 48 },
+  { state: "Chihuahua (Cusi)", cat: "Vaca Flaca / Desecho", price: 30.00, prev: 28.00, peso: "350+ kg", fuente: "AGL Cusi Mar 2026", low: 20, high: 37 },
+  { state: "Chihuahua (Cusi)", cat: "Toro Gordo", price: 50.00, prev: 47.00, peso: "500+ kg", fuente: "AGL Cusi Mar 2026", low: 36, high: 55 },
+  { state: "Chihuahua (Cusi)", cat: "Toro Desecho", price: 42.00, prev: 40.00, peso: "500+ kg", fuente: "AGL Cusi Mar 2026", low: 30, high: 47 },
+
+  // NUEVO LEON — Subasta Ganadera NL (China, NL) / UGRNL
+  /* --- Becerros --- */
+  { state: "Nuevo Leon", cat: "Becerro Europeo 140-200 kg", price: 132.00, prev: 127.00, peso: "140-200 kg", fuente: "Sub. Ganadera NL", low: 85, high: 142 },
+  { state: "Nuevo Leon", cat: "Becerro Europeo 200-280 kg", price: 120.00, prev: 115.00, peso: "200-280 kg", fuente: "Sub. Ganadera NL", low: 76, high: 132 },
+  { state: "Nuevo Leon", cat: "Becerro Cebú 140-200 kg", price: 108.00, prev: 103.00, peso: "140-200 kg", fuente: "Sub. Ganadera NL", low: 65, high: 118 },
+  { state: "Nuevo Leon", cat: "Becerro Cebú 200-280 kg", price: 98.00, prev: 94.00, peso: "200-280 kg", fuente: "Sub. Ganadera NL", low: 58, high: 108 },
+  /* --- Becerras --- */
+  { state: "Nuevo Leon", cat: "Becerra Europea 140-200 kg", price: 107.00, prev: 102.00, peso: "140-200 kg", fuente: "Sub. Ganadera NL", low: 68, high: 114 },
+  { state: "Nuevo Leon", cat: "Becerra Europea 200-280 kg", price: 97.00, prev: 92.00, peso: "200-280 kg", fuente: "Sub. Ganadera NL", low: 60, high: 106 },
+  { state: "Nuevo Leon", cat: "Becerra Cebú 140-200 kg", price: 90.00, prev: 85.00, peso: "140-200 kg", fuente: "Sub. Ganadera NL", low: 54, high: 98 },
+  /* --- Toretes y Vaquillas --- */
+  { state: "Nuevo Leon", cat: "Torete Europeo 250-360 kg", price: 94.00, prev: 90.00, peso: "250-360 kg", fuente: "Sub. Ganadera NL", low: 65, high: 102 },
+  { state: "Nuevo Leon", cat: "Torete Cebú 250-360 kg", price: 82.00, prev: 78.00, peso: "250-360 kg", fuente: "Sub. Ganadera NL", low: 50, high: 90 },
+  { state: "Nuevo Leon", cat: "Vaquilla Europea 250-350 kg", price: 84.00, prev: 80.00, peso: "250-350 kg", fuente: "Sub. Ganadera NL", low: 55, high: 92 },
+  { state: "Nuevo Leon", cat: "Vaquilla Cebú 250-350 kg", price: 74.00, prev: 70.00, peso: "250-350 kg", fuente: "Sub. Ganadera NL", low: 46, high: 82 },
+  /* --- Novillo, Vaca, Toro --- */
+  { state: "Nuevo Leon", cat: "Novillo Gordo 400+ kg", price: 62.00, prev: 59.00, peso: "400+ kg", fuente: "UGRNL / Ref.", low: 44, high: 70 },
+  { state: "Nuevo Leon", cat: "Vaca Gorda Abasto", price: 42.00, prev: 40.00, peso: "400+ kg", fuente: "UGRNL / Ref.", low: 32, high: 46 },
+  { state: "Nuevo Leon", cat: "Vaca Flaca / Desecho", price: 30.00, prev: 28.00, peso: "350+ kg", fuente: "UGRNL / Ref.", low: 20, high: 36 },
+  { state: "Nuevo Leon", cat: "Toro Gordo", price: 50.00, prev: 47.00, peso: "500+ kg", fuente: "UGRNL / Ref.", low: 36, high: 55 },
+  { state: "Nuevo Leon", cat: "Toro Desecho", price: 43.00, prev: 41.00, peso: "500+ kg", fuente: "UGRNL / Ref.", low: 30, high: 48 },
+
+  // JALISCO — UGRJ / Rastro Municipal Guadalajara
+  /* --- Becerros Europeos --- */
+  { state: "Jalisco", cat: "Becerro Europeo 170-250 kg", price: 88.00, prev: 84.00, peso: "170-250 kg", fuente: "UGRJ Mar 2026", low: 55, high: 97 },
+  { state: "Jalisco", cat: "Becerro Europeo 250-290 kg", price: 86.00, prev: 82.00, peso: "250-290 kg", fuente: "UGRJ Mar 2026", low: 52, high: 94 },
+  { state: "Jalisco", cat: "Becerro Europeo 290-350 kg", price: 84.00, prev: 80.00, peso: "290-350 kg", fuente: "UGRJ Mar 2026", low: 50, high: 92 },
+  /* --- Becerros Cebú --- */
+  { state: "Jalisco", cat: "Becerro Cebú 170-250 kg", price: 80.00, prev: 76.00, peso: "170-250 kg", fuente: "UGRJ Mar 2026", low: 48, high: 88 },
+  { state: "Jalisco", cat: "Becerro Cebú 250-290 kg", price: 78.00, prev: 74.00, peso: "250-290 kg", fuente: "UGRJ Mar 2026", low: 46, high: 86 },
+  /* --- Becerras --- */
+  { state: "Jalisco", cat: "Becerra Europea 170-250 kg", price: 78.00, prev: 74.00, peso: "170-250 kg", fuente: "UGRJ Mar 2026", low: 48, high: 87 },
+  { state: "Jalisco", cat: "Becerra Europea 250-300 kg", price: 74.00, prev: 70.00, peso: "250-300 kg", fuente: "UGRJ Mar 2026", low: 44, high: 82 },
+  { state: "Jalisco", cat: "Becerra Cebú 170-250 kg", price: 75.00, prev: 72.00, peso: "170-250 kg", fuente: "UGRJ Mar 2026", low: 46, high: 83 },
+  /* --- Toretes --- */
+  { state: "Jalisco", cat: "Torete Europeo 250-360 kg", price: 85.00, prev: 81.00, peso: "250-360 kg", fuente: "UGRJ Mar 2026", low: 52, high: 93 },
+  { state: "Jalisco", cat: "Torete Cebú 250-360 kg", price: 83.00, prev: 79.00, peso: "250-360 kg", fuente: "UGRJ Mar 2026", low: 50, high: 91 },
+  /* --- Vaquillas --- */
+  { state: "Jalisco", cat: "Vaquilla Europea 280-350 kg", price: 73.00, prev: 70.00, peso: "280-350 kg", fuente: "UGRJ Mar 2026", low: 45, high: 82 },
+  { state: "Jalisco", cat: "Vaquilla Cebú 280-350 kg", price: 71.00, prev: 68.00, peso: "280-350 kg", fuente: "UGRJ Mar 2026", low: 43, high: 79 },
+  /* --- Novillo, Vaca, Toro --- */
+  { state: "Jalisco", cat: "Novillo Gordo 400+ kg", price: 60.00, prev: 57.00, peso: "400+ kg", fuente: "UGRJ / SNIIM", low: 42, high: 68 },
+  { state: "Jalisco", cat: "Vaca Gorda Abasto", price: 41.00, prev: 39.00, peso: "400+ kg", fuente: "UGRJ / SNIIM", low: 30, high: 45 },
+  { state: "Jalisco", cat: "Vaca Flaca / Desecho", price: 28.00, prev: 26.00, peso: "350+ kg", fuente: "UGRJ / SNIIM", low: 18, high: 34 },
+  { state: "Jalisco", cat: "Toro Gordo", price: 48.00, prev: 46.00, peso: "500+ kg", fuente: "UGRJ / SNIIM", low: 34, high: 53 },
+  { state: "Jalisco", cat: "Toro Desecho", price: 42.00, prev: 40.00, peso: "500+ kg", fuente: "UGRJ / SNIIM", low: 28, high: 47 },
+
+  // DURANGO — AGL Durango (Subasta Martes y Jueves)
+  /* --- Becerros #1 (calidad exportación) --- */
+  { state: "Durango", cat: "Becerro #1 (80-130 kg)", price: 92.00, prev: 88.00, peso: "80-130 kg", fuente: "AGL Durango Mar 2026", low: 58, high: 98 },
+  { state: "Durango", cat: "Becerro #1 (131-180 kg)", price: 90.00, prev: 86.00, peso: "131-180 kg", fuente: "AGL Durango Mar 2026", low: 55, high: 95 },
+  { state: "Durango", cat: "Becerro #1 (180-220 kg)", price: 87.00, prev: 83.00, peso: "180-220 kg", fuente: "AGL Durango Mar 2026", low: 52, high: 92 },
+  /* --- Becerros #2 (calidad nacional) --- */
+  { state: "Durango", cat: "Becerro #2 (80-130 kg)", price: 75.00, prev: 71.00, peso: "80-130 kg", fuente: "AGL Durango Mar 2026", low: 45, high: 82 },
+  { state: "Durango", cat: "Becerro #2 (131-180 kg)", price: 73.00, prev: 69.00, peso: "131-180 kg", fuente: "AGL Durango Mar 2026", low: 42, high: 80 },
+  { state: "Durango", cat: "Becerro #2 (180-220 kg)", price: 70.00, prev: 66.00, peso: "180-220 kg", fuente: "AGL Durango Mar 2026", low: 40, high: 78 },
+  /* --- Becerras #1 --- */
+  { state: "Durango", cat: "Becerra #1 (80-130 kg)", price: 83.00, prev: 79.00, peso: "80-130 kg", fuente: "AGL Durango Mar 2026", low: 50, high: 90 },
+  { state: "Durango", cat: "Becerra #1 (131-180 kg)", price: 81.00, prev: 77.00, peso: "131-180 kg", fuente: "AGL Durango Mar 2026", low: 48, high: 88 },
+  { state: "Durango", cat: "Becerra #1 (180-220 kg)", price: 79.00, prev: 75.00, peso: "180-220 kg", fuente: "AGL Durango Mar 2026", low: 46, high: 86 },
+  /* --- Becerras #2 --- */
+  { state: "Durango", cat: "Becerra #2 (80-130 kg)", price: 67.00, prev: 64.00, peso: "80-130 kg", fuente: "AGL Durango Mar 2026", low: 38, high: 74 },
+  { state: "Durango", cat: "Becerra #2 (131-180 kg)", price: 66.00, prev: 63.00, peso: "131-180 kg", fuente: "AGL Durango Mar 2026", low: 36, high: 72 },
+  { state: "Durango", cat: "Becerra #2 (180-220 kg)", price: 65.00, prev: 62.00, peso: "180-220 kg", fuente: "AGL Durango Mar 2026", low: 34, high: 70 },
+  /* --- Toretes y Vaquillas --- */
+  { state: "Durango", cat: "Torete 220-350 kg", price: 65.00, prev: 62.00, peso: "220-350 kg", fuente: "AGL Durango Mar 2026", low: 40, high: 72 },
+  { state: "Durango", cat: "Torete 350-450 kg", price: 58.00, prev: 55.00, peso: "350-450 kg", fuente: "AGL Durango Mar 2026", low: 36, high: 65 },
+  { state: "Durango", cat: "Vaquilla 220-350 kg", price: 62.00, prev: 59.00, peso: "220-350 kg", fuente: "AGL Durango Mar 2026", low: 38, high: 68 },
+  /* --- Novillo, Vaca, Toro --- */
+  { state: "Durango", cat: "Novillo Gordo 400+ kg", price: 55.00, prev: 52.00, peso: "400+ kg", fuente: "AGL Durango Mar 2026", low: 38, high: 62 },
+  { state: "Durango", cat: "Vaca Gorda", price: 39.00, prev: 37.00, peso: "400+ kg", fuente: "AGL Durango Mar 2026", low: 28, high: 43 },
+  { state: "Durango", cat: "Vaca Flaca / Desecho", price: 26.00, prev: 24.00, peso: "350+ kg", fuente: "AGL Durango Mar 2026", low: 16, high: 32 },
+  { state: "Durango", cat: "Toro Gordo", price: 46.00, prev: 43.00, peso: "500+ kg", fuente: "AGL Durango Mar 2026", low: 32, high: 51 },
+  { state: "Durango", cat: "Toro Desecho", price: 40.00, prev: 38.00, peso: "500+ kg", fuente: "AGL Durango Mar 2026", low: 28, high: 45 },
+
+  // TAMAULIPAS — UGRT (Cd. Victoria, Reynosa)
+  /* --- Becerros --- */
+  { state: "Tamaulipas", cat: "Becerro Export 100-160 kg", price: 130.00, prev: 124.00, peso: "100-160 kg", fuente: "UGRT Mar 2026", low: 80, high: 140 },
+  { state: "Tamaulipas", cat: "Becerro Export 160-200 kg", price: 125.00, prev: 119.00, peso: "160-200 kg", fuente: "UGRT Mar 2026", low: 76, high: 135 },
+  { state: "Tamaulipas", cat: "Becerro Export 200-250 kg", price: 118.00, prev: 112.00, peso: "200-250 kg", fuente: "UGRT Mar 2026", low: 70, high: 128 },
+  { state: "Tamaulipas", cat: "Becerro Nacional 100-180 kg", price: 100.00, prev: 95.00, peso: "100-180 kg", fuente: "UGRT Mar 2026", low: 60, high: 112 },
+  /* --- Becerras --- */
+  { state: "Tamaulipas", cat: "Becerra Export 100-160 kg", price: 105.00, prev: 99.00, peso: "100-160 kg", fuente: "UGRT Mar 2026", low: 62, high: 114 },
+  { state: "Tamaulipas", cat: "Becerra Export 160-200 kg", price: 100.00, prev: 94.00, peso: "160-200 kg", fuente: "UGRT Mar 2026", low: 58, high: 108 },
+  { state: "Tamaulipas", cat: "Becerra Nacional 100-180 kg", price: 85.00, prev: 80.00, peso: "100-180 kg", fuente: "UGRT Mar 2026", low: 50, high: 94 },
+  /* --- Toretes y Vaquillas --- */
+  { state: "Tamaulipas", cat: "Torete 220-350 kg", price: 88.00, prev: 84.00, peso: "220-350 kg", fuente: "UGRT Mar 2026", low: 52, high: 96 },
+  { state: "Tamaulipas", cat: "Vaquilla Engorda 250-350 kg", price: 78.00, prev: 74.00, peso: "250-350 kg", fuente: "UGRT Mar 2026", low: 46, high: 86 },
+  /* --- Novillo, Vaca, Toro --- */
+  { state: "Tamaulipas", cat: "Novillo Gordo 400+ kg", price: 60.00, prev: 57.00, peso: "400+ kg", fuente: "UGRT Mar 2026", low: 42, high: 68 },
+  { state: "Tamaulipas", cat: "Vaca Gorda Abasto", price: 41.00, prev: 39.00, peso: "400+ kg", fuente: "UGRT Mar 2026", low: 30, high: 45 },
+  { state: "Tamaulipas", cat: "Vaca Flaca / Desecho", price: 28.00, prev: 26.00, peso: "350+ kg", fuente: "UGRT Mar 2026", low: 18, high: 34 },
+  { state: "Tamaulipas", cat: "Toro Gordo", price: 48.00, prev: 46.00, peso: "500+ kg", fuente: "UGRT Mar 2026", low: 34, high: 53 },
+  { state: "Tamaulipas", cat: "Toro Desecho", price: 42.00, prev: 40.00, peso: "500+ kg", fuente: "UGRT Mar 2026", low: 28, high: 47 },
+
+  // VERACRUZ — UGR Zona Centro (Precios mensuales)
+  /* --- Becerros --- */
+  { state: "Veracruz", cat: "Becerro Suizo/Europeo 120-180 kg", price: 82.00, prev: 78.00, peso: "120-180 kg", fuente: "UGR Veracruz Mar 2026", low: 52, high: 92 },
+  { state: "Veracruz", cat: "Becerro Suizo/Europeo 180-250 kg", price: 78.00, prev: 74.00, peso: "180-250 kg", fuente: "UGR Veracruz Mar 2026", low: 48, high: 88 },
+  { state: "Veracruz", cat: "Becerro Cebú 120-180 kg", price: 72.00, prev: 68.00, peso: "120-180 kg", fuente: "UGR Veracruz Mar 2026", low: 44, high: 80 },
+  { state: "Veracruz", cat: "Becerro Cebú 180-250 kg", price: 68.00, prev: 64.00, peso: "180-250 kg", fuente: "UGR Veracruz Mar 2026", low: 40, high: 76 },
+  /* --- Becerras --- */
+  { state: "Veracruz", cat: "Becerra Suiza/Europea 120-180 kg", price: 70.00, prev: 66.00, peso: "120-180 kg", fuente: "UGR Veracruz Mar 2026", low: 42, high: 78 },
+  { state: "Veracruz", cat: "Becerra Suiza/Europea 180-250 kg", price: 66.00, prev: 62.00, peso: "180-250 kg", fuente: "UGR Veracruz Mar 2026", low: 38, high: 74 },
+  { state: "Veracruz", cat: "Becerra Cebú 120-180 kg", price: 62.00, prev: 58.00, peso: "120-180 kg", fuente: "UGR Veracruz Mar 2026", low: 36, high: 70 },
+  { state: "Veracruz", cat: "Becerra Cebú 180-250 kg", price: 58.00, prev: 54.00, peso: "180-250 kg", fuente: "UGR Veracruz Mar 2026", low: 32, high: 66 },
+  /* --- Toretes y Vaquillas --- */
+  { state: "Veracruz", cat: "Torete Suizo/Europeo 250-380 kg", price: 72.00, prev: 68.00, peso: "250-380 kg", fuente: "UGR Veracruz Mar 2026", low: 44, high: 80 },
+  { state: "Veracruz", cat: "Torete Cebú 250-380 kg", price: 66.00, prev: 62.00, peso: "250-380 kg", fuente: "UGR Veracruz Mar 2026", low: 38, high: 74 },
+  { state: "Veracruz", cat: "Vaquilla Suiza/Europea 250-350 kg", price: 65.00, prev: 62.00, peso: "250-350 kg", fuente: "UGR Veracruz Mar 2026", low: 38, high: 72 },
+  { state: "Veracruz", cat: "Vaquilla Cebú 250-350 kg", price: 60.00, prev: 56.00, peso: "250-350 kg", fuente: "UGR Veracruz Mar 2026", low: 34, high: 68 },
+  /* --- Novillo, Vaca, Toro --- */
+  { state: "Veracruz", cat: "Novillo Gordo 400+ kg", price: 58.00, prev: 55.00, peso: "400+ kg", fuente: "UGR Veracruz Mar 2026", low: 40, high: 66 },
+  { state: "Veracruz", cat: "Vaca Gorda", price: 42.00, prev: 40.00, peso: "400+ kg", fuente: "UGR Veracruz Mar 2026", low: 30, high: 48 },
+  { state: "Veracruz", cat: "Vaca Flaca / Desecho", price: 28.00, prev: 26.00, peso: "350+ kg", fuente: "UGR Veracruz Mar 2026", low: 18, high: 34 },
+  { state: "Veracruz", cat: "Toro Gordo", price: 48.00, prev: 45.00, peso: "500+ kg", fuente: "UGR Veracruz Mar 2026", low: 34, high: 54 },
+  { state: "Veracruz", cat: "Toro Desecho", price: 40.00, prev: 38.00, peso: "500+ kg", fuente: "UGR Veracruz Mar 2026", low: 26, high: 46 },
+
+  // TABASCO — AGL Balancán / UGR Tabasco
+  /* --- Novillos (categorías típicas Tabasco) --- */
+  { state: "Tabasco", cat: "Novillo Especial", price: 116.00, prev: 110.00, peso: "380-450 kg", fuente: "UGR Tabasco Mar 2026", low: 90, high: 125 },
+  { state: "Tabasco", cat: "Novillo Finalizado", price: 105.00, prev: 98.00, peso: "400+ kg", fuente: "UGR Tabasco Mar 2026", low: 78, high: 112 },
+  { state: "Tabasco", cat: "Novillo Primera", price: 92.00, prev: 87.00, peso: "350-400 kg", fuente: "UGR Tabasco Mar 2026", low: 68, high: 100 },
+  { state: "Tabasco", cat: "Novillo Segunda", price: 80.00, prev: 75.00, peso: "300-380 kg", fuente: "UGR Tabasco Mar 2026", low: 58, high: 88 },
+  /* --- Becerros --- */
+  { state: "Tabasco", cat: "Becerro Cebú 100-180 kg", price: 68.00, prev: 64.00, peso: "100-180 kg", fuente: "AGL Balancán Mar 2026", low: 42, high: 76 },
+  { state: "Tabasco", cat: "Becerro Cebú 180-250 kg", price: 64.00, prev: 60.00, peso: "180-250 kg", fuente: "AGL Balancán Mar 2026", low: 38, high: 72 },
+  /* --- Becerras --- */
+  { state: "Tabasco", cat: "Becerra Cebú 100-180 kg", price: 58.00, prev: 54.00, peso: "100-180 kg", fuente: "AGL Balancán Mar 2026", low: 34, high: 66 },
+  { state: "Tabasco", cat: "Becerra Cebú 180-250 kg", price: 54.00, prev: 50.00, peso: "180-250 kg", fuente: "AGL Balancán Mar 2026", low: 30, high: 62 },
+  /* --- Toretes y Vaquillas --- */
+  { state: "Tabasco", cat: "Torete 250-380 kg", price: 72.00, prev: 68.00, peso: "250-380 kg", fuente: "UGR Tabasco Mar 2026", low: 44, high: 80 },
+  { state: "Tabasco", cat: "Vaquilla Engorda 250-350 kg", price: 62.00, prev: 58.00, peso: "250-350 kg", fuente: "UGR Tabasco Mar 2026", low: 36, high: 70 },
+  /* --- Vacas y Toros --- */
+  { state: "Tabasco", cat: "Vaca Suprema", price: 99.00, prev: 90.00, peso: "450+ kg", fuente: "UGR Tabasco Mar 2026", low: 72, high: 106 },
+  { state: "Tabasco", cat: "Vaca Primera", price: 85.00, prev: 80.00, peso: "400+ kg", fuente: "UGR Tabasco Mar 2026", low: 62, high: 92 },
+  { state: "Tabasco", cat: "Vaca Segunda", price: 65.00, prev: 60.00, peso: "350+ kg", fuente: "UGR Tabasco Mar 2026", low: 45, high: 72 },
+  { state: "Tabasco", cat: "Vaca Flaca / Desecho", price: 38.00, prev: 35.00, peso: "300+ kg", fuente: "UGR Tabasco Mar 2026", low: 24, high: 44 },
+  { state: "Tabasco", cat: "Toro Gordo", price: 55.00, prev: 52.00, peso: "500+ kg", fuente: "UGR Tabasco Mar 2026", low: 38, high: 62 },
+  { state: "Tabasco", cat: "Toro Desecho", price: 44.00, prev: 42.00, peso: "500+ kg", fuente: "UGR Tabasco Mar 2026", low: 28, high: 50 },
+
+  // CHIAPAS — UGR Chiapas / SNIIM Ref.
+  /* --- Becerros --- */
+  { state: "Chiapas", cat: "Becerro Cebú 100-180 kg", price: 62.00, prev: 58.00, peso: "100-180 kg", fuente: "UGR Chiapas / SNIIM", low: 38, high: 70 },
+  { state: "Chiapas", cat: "Becerro Cebú 180-250 kg", price: 58.00, prev: 55.00, peso: "180-250 kg", fuente: "UGR Chiapas / SNIIM", low: 34, high: 66 },
+  { state: "Chiapas", cat: "Becerro Cruce Europeo 100-180 kg", price: 68.00, prev: 64.00, peso: "100-180 kg", fuente: "UGR Chiapas / SNIIM", low: 42, high: 76 },
+  /* --- Becerras --- */
+  { state: "Chiapas", cat: "Becerra Cebú 100-180 kg", price: 52.00, prev: 48.00, peso: "100-180 kg", fuente: "UGR Chiapas / SNIIM", low: 30, high: 60 },
+  { state: "Chiapas", cat: "Becerra Cebú 180-250 kg", price: 48.00, prev: 45.00, peso: "180-250 kg", fuente: "UGR Chiapas / SNIIM", low: 26, high: 56 },
+  /* --- Toretes y Vaquillas --- */
+  { state: "Chiapas", cat: "Torete Cebú 250-380 kg", price: 58.00, prev: 55.00, peso: "250-380 kg", fuente: "UGR Chiapas / SNIIM", low: 34, high: 66 },
+  { state: "Chiapas", cat: "Vaquilla Cebú 250-350 kg", price: 52.00, prev: 49.00, peso: "250-350 kg", fuente: "UGR Chiapas / SNIIM", low: 30, high: 60 },
+  /* --- Novillo, Vaca, Toro --- */
+  { state: "Chiapas", cat: "Novillo Gordo 400+ kg", price: 56.00, prev: 53.00, peso: "400+ kg", fuente: "UGR Chiapas / SNIIM", low: 38, high: 64 },
+  { state: "Chiapas", cat: "Vaca Gorda", price: 40.00, prev: 38.00, peso: "400+ kg", fuente: "UGR Chiapas / SNIIM", low: 28, high: 46 },
+  { state: "Chiapas", cat: "Vaca Flaca / Desecho", price: 26.00, prev: 24.00, peso: "300+ kg", fuente: "UGR Chiapas / SNIIM", low: 16, high: 32 },
+  { state: "Chiapas", cat: "Toro Gordo", price: 46.00, prev: 43.00, peso: "500+ kg", fuente: "UGR Chiapas / SNIIM", low: 32, high: 52 },
+  { state: "Chiapas", cat: "Toro Desecho", price: 38.00, prev: 36.00, peso: "500+ kg", fuente: "UGR Chiapas / SNIIM", low: 24, high: 44 },
+];
+
+const mxHistorico = [
+  { year: "2021", min: 50, max: 65, avg: 57.5 },
+  { year: "2022", min: 60, max: 78, avg: 69 },
+  { year: "2023", min: 70, max: 95, avg: 82.5 },
+  { year: "2024", min: 85, max: 120, avg: 102.5 },
+  { year: "2025", min: 100, max: 190, avg: 135.0 },
+  { year: "2026*", min: 85, max: 151, avg: 118.0 },
+];
+
+const mxContext = [
+  { label: "Exportacion 2024", value: "1,240,203", note: "cabezas a EE.UU.", color: "#4CAF50" },
+  { label: "Export. acum. 2025", value: "230,638", note: "cabezas (-81.4% vs 2024)", color: "#EF5350" },
+  { label: "Frontera EE.UU.", value: "CERRADA", note: "Gusano barrenador / Planta moscas esteriles en construccion (Chiapas)", color: "#EF5350" },
+  { label: "Perdida estimada", value: "$1,552 MDD", note: "1.19M cabezas varadas por cierre", color: "#EF5350" },
+  { label: "Becerro Record", value: "$190/kg", note: "Expogan Chihuahua 2025", color: "#C8A94E" },
+  { label: "Tipo de Cambio", value: "$17.95", note: "MXN/USD Banxico 14 Mar 2026", color: "#7A8A6E" },
+];
+
+// ========================================================
+// OTROS PECUARIOS — Leche, Huevo, Cerdo, Ovino, Caprino
+// ========================================================
+const pecCatColors = {
+  "Leche": { badge: "#E0E0E0", bg: "rgba(224,224,224,0.08)", border: "#BDBDBD" },
+  "Huevo": { badge: "#FFE082", bg: "rgba(255,224,130,0.08)", border: "#FFD54F" },
+  "Porcino": { badge: "#F48FB1", bg: "rgba(244,143,177,0.08)", border: "#EC407A" },
+  "Ovino": { badge: "#A5D6A7", bg: "rgba(165,214,167,0.08)", border: "#66BB6A" },
+  "Caprino": { badge: "#BCAAA4", bg: "rgba(188,170,164,0.08)", border: "#A1887F" },
+};
+
+const pecuariosMX = [
+  // LECHE
+  { cat: "Leche", name: "Precio Garantizado SEGALMEX", price: 11.50, prev: 11.50, unit: "MXN/litro", fuente: "SEGALMEX/Liconsa 2026", region: "Nacional", low: 7.00, high: 12.00 },
+  { cat: "Leche", name: "Promedio Productor", price: 10.20, prev: 10.50, unit: "MXN/litro", fuente: "SIAP / Ref. regional", region: "Nacional prom.", low: 6.00, high: 11.50 },
+  { cat: "Leche", name: "Precio al Consumidor", price: 30.00, prev: 28.50, unit: "MXN/litro", fuente: "Profeco / Ref. comercial", region: "Supermercados", low: 19.00, high: 35.00 },
+  { cat: "Leche", name: "Leche CME Clase III", price: 19.45, prev: 19.30, unit: "USD/cwt", fuente: "CME Group", region: "EE.UU. (ref.)", low: 15.80, high: 23.50 },
+
+  // HUEVO
+  { cat: "Huevo", name: "Huevo Blanco Mayoreo CDMX", price: 37.00, prev: 35.50, unit: "MXN/kg", fuente: "SNIIM / Central de Abasto", region: "CDMX (Iztapalapa)", low: 28.00, high: 47.00 },
+  { cat: "Huevo", name: "Huevo Rojo Mayoreo CDMX", price: 41.50, prev: 40.00, unit: "MXN/kg", fuente: "SNIIM / Central de Abasto", region: "CDMX (Iztapalapa)", low: 32.00, high: 50.00 },
+  { cat: "Huevo", name: "Huevo Blanco Queretaro", price: 36.75, prev: 35.00, unit: "MXN/kg", fuente: "SNIIM", region: "Queretaro", low: 28.00, high: 45.00 },
+  { cat: "Huevo", name: "Huevo Blanco Toluca", price: 45.00, prev: 43.00, unit: "MXN/kg", fuente: "SNIIM / Central de Abasto", region: "Toluca", low: 32.00, high: 52.00 },
+
+  // PORCINO
+  { cat: "Porcino", name: "Cerdo en Pie (Granja)", price: 45.98, prev: 40.62, unit: "MXN/kg", fuente: "Porcicultura.com Mar 2026", region: "Nacional prom.", low: 32.00, high: 50.00 },
+  { cat: "Porcino", name: "Cerdo en Canal (Rastro)", price: 48.79, prev: 45.50, unit: "MXN/kg", fuente: "ASERCA / Rastro CDMX", region: "CDMX y Area Met.", low: 36.00, high: 55.00 },
+  { cat: "Porcino", name: "Cerdo Rastro Jalisco", price: 47.00, prev: 44.00, unit: "MXN/kg", fuente: "UGRJ / Rastro GDL Ene 2026", region: "Jalisco", low: 34.00, high: 52.00 },
+  { cat: "Porcino", name: "Lean Hogs CME (Ref.)", price: 95.58, prev: 96.10, unit: "USD cents/lb", fuente: "CME Group", region: "EE.UU. (ref.)", low: 72.00, high: 108.00 },
+
+  // OVINO
+  { cat: "Ovino", name: "Borrego en Pie (Centro)", price: 48.00, prev: 46.00, unit: "MXN/kg", fuente: "Ref. regional / SNIIM", region: "Hidalgo / EdoMex", low: 35.00, high: 55.00 },
+  { cat: "Ovino", name: "Borrego en Pie (Bajio)", price: 45.00, prev: 43.00, unit: "MXN/kg", fuente: "Ref. regional / SNIIM", region: "Queretaro / GTO", low: 33.00, high: 52.00 },
+  { cat: "Ovino", name: "Borrego Rastro Jalisco", price: 52.00, prev: 50.00, unit: "MXN/kg", fuente: "UGRJ / Rastro GDL Ene 2026", region: "Jalisco", low: 38.00, high: 58.00 },
+
+  // CAPRINO
+  { cat: "Caprino", name: "Cabra en Pie Nacional", price: 32.00, prev: 30.50, unit: "MXN/kg", fuente: "SIAP / Ref. regional", region: "Nacional prom.", low: 22.00, high: 40.00 },
+  { cat: "Caprino", name: "Cabrito Lechal (Norte)", price: 180.00, prev: 175.00, unit: "MXN/pieza", fuente: "Ref. Coahuila/NL", region: "Coahuila / NL", low: 120.00, high: 220.00 },
+  { cat: "Caprino", name: "Cabra Rastro Jalisco", price: 35.00, prev: 33.00, unit: "MXN/kg", fuente: "UGRJ / Rastro GDL", region: "Jalisco", low: 24.00, high: 42.00 },
+];
+
+const pecuariosFuentes = [
+  { label: "SNIIM", value: "economia-sniim.gob.mx", note: "Huevo, leche, carnes. Actualizacion: diaria/semanal", color: "#FFE082" },
+  { label: "Porcicultura.com", value: "porcicultura.com/economia", note: "Cerdo en pie, canal, subproductos. Actualizacion: semanal", color: "#F48FB1" },
+  { label: "3tres3.com", value: "3tres3.com (cotizaciones)", note: "Cerdo nacional en vivo. Actualizacion: semanal", color: "#F48FB1" },
+  { label: "ASERCA", value: "info.aserca.gob.mx", note: "Porcino y bovino en rastro CDMX. Actualizacion: diaria", color: "#CE93D8" },
+  { label: "UGRJ (Jalisco)", value: "ugrj.org.mx", note: "Bovino, porcino, ovino y caprino en rastro GDL. Actualizacion: semanal", color: "#CE93D8" },
+  { label: "SIAP / Agricultura", value: "numerosdelcampo.agricultura.gob.mx", note: "Produccion pecuaria, precios al productor. Actualizacion: mensual", color: "#A5D6A7" },
+  { label: "UNA (Avicultores)", value: "una.org.mx", note: "Precio del huevo, produccion avicola. Actualizacion: quincenal", color: "#FFE082" },
+  { label: "Profeco", value: "profeco.gob.mx (QQPC)", note: "Quien es Quien en los Precios - precios al consumidor. Actualizacion: semanal", color: "#E0E0E0" },
+  { label: "SEGALMEX / Liconsa", value: "gob.mx/liconsa", note: "Precio garantizado de leche. Actualizacion: semestral/anual", color: "#E0E0E0" },
+  { label: "UGR Veracruz", value: "FB: VeracruzAgropecuario", note: "Ganado zona centro Veracruz. Actualizacion: mensual", color: "#AED581" },
+  { label: "UGR Tabasco / AGL Balancán", value: "aglbalancan.com", note: "Ganado en pie Tabasco. Actualizacion: semanal/quincenal", color: "#4DB6AC" },
+  { label: "UGR Chiapas / SNIIM", value: "economia-sniim.gob.mx", note: "Ganado en pie Chiapas. Actualizacion: quincenal/mensual", color: "#FF8A65" },
+];
+
+// ========================================================
+// RENDER FUNCTIONS
+// ========================================================
+function renderMXCattle() {
+  const container = document.getElementById('ganadomx-grid');
+  if (!container) return;
+  let html = '';
+
+  // Group by state
+  const stateOrder = ["Sonora","Chihuahua","Chihuahua (Cusi)","Nuevo Leon","Jalisco","Durango","Tamaulipas","Veracruz","Tabasco","Chiapas"];
+  const stateLabels = {
+    "Sonora": "Hermosillo, Sonora (UGRS)",
+    "Chihuahua": "Chihuahua (UGRCH / USDA)",
+    "Chihuahua (Cusi)": "Cusihuiriachi, Cuauhtemoc, Chih. (AGL Cusi / UGRCH)",
+    "Nuevo Leon": "Nuevo Leon (Subasta Ganadera NL)",
+    "Jalisco": "Jalisco / GDL (UGRJ)",
+    "Durango": "Durango (AGL Durango)",
+    "Tamaulipas": "Tamaulipas (UGRT)",
+    "Veracruz": "Veracruz Zona Centro (UGR Veracruz)",
+    "Tabasco": "Tabasco / Balancán (UGR Tabasco)",
+    "Chiapas": "Chiapas (UGR Chiapas / SNIIM)",
+  };
+  stateOrder.forEach(state => {
+    const sc = stateConfig[state];
+    const items = ganadoMX.filter(g => g.state === state);
+    if (items.length === 0) return;
+
+    html += `<div class="state-header" style="color:${sc.color};background:${sc.bg};border-left-color:${sc.borderLeft};">
+      <span>${stateLabels[state] || state}</span>
+      <span style="font-size:0.65rem;font-weight:400;opacity:0.6;margin-left:auto;">${items.length} categorias</span>
+    </div>`;
+    html += '<div class="grid" style="margin-bottom:8px;">';
+
+    items.forEach(item => {
+      const change = item.price - item.prev;
+      const changePct = (change / item.prev) * 100;
+      const dir = change > 0 ? 'up' : change < 0 ? 'down' : 'flat';
+      const arrow = dir === 'up' ? '▲' : dir === 'down' ? '▼' : '■';
+      const range = item.high - item.low;
+      const pos = ((item.price - item.low) / range) * 100;
+      const colors = { up: '#4CAF50', down: '#EF5350', flat: '#C8A94E' };
+      const c = colors[dir];
+
+      let miniHtml = '<div class="mini-chart">';
+      for (let i = 0; i < 12; i++) {
+        const drift = (i - 6) * (Math.random() * 1.3);
+        const h = Math.max(8, Math.min(95, pos + drift + (Math.random()-0.5)*10));
+        miniHtml += `<div class="mini-bar" style="height:${h}%;background:${c};"></div>`;
+      }
+      miniHtml += '</div>';
+
+      html += `
+        <div class="mx-card">
+          <div class="card-header">
+            <div class="card-name" style="color:var(--r4p-text);">${item.cat}</div>
+            <div class="card-symbol" style="border-color:${sc.color}35;">${item.peso}</div>
+          </div>
+          <div class="card-price ${dir}" style="font-size:1.5rem;font-weight:800;font-family:'R4P Heading',sans-serif;margin:4px 0;letter-spacing:-0.5px;">$${item.price.toFixed(2)}</div>
+          <div class="card-unit">MXN $/kg en pie | ${item.fuente}</div>
+          ${miniHtml}
+          <div class="card-change" style="font-size:0.76rem;">
+            <span class="change-val ${dir}">${arrow} ${change >= 0 ? '+' : ''}$${change.toFixed(2)}</span>
+            <span class="${dir}">(${changePct >= 0 ? '+' : ''}${changePct.toFixed(1)}% vs anterior)</span>
+          </div>
+          <div class="range-row"><span>Min 5a: $${item.low}</span><span>Max 5a: $${item.high}</span></div>
+          <div class="card-bar" style="background:linear-gradient(90deg, transparent, ${sc.color}60);"></div>
+        </div>`;
+    });
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+
+  // Context cards
+  const ctxGrid = document.getElementById('mx-context-cards');
+  if (ctxGrid) {
+    ctxGrid.innerHTML = mxContext.map(c => `
+      <div class="ctx-card">
+        <div class="ctx-label">${c.label}</div>
+        <div class="ctx-value" style="color:${c.color};">${c.value}</div>
+        <div class="ctx-note">${c.note}</div>
+      </div>`).join('');
+  }
+
+  // History chart
+  const chartEl = document.getElementById('mx-history-chart');
+  const labelsEl = document.getElementById('mx-history-labels');
+  if (chartEl && labelsEl) {
+    const maxVal = 180;
+    const gradients = ['#1B5E20','#2E7D32','#388E3C','#66BB6A','#C8A94E','#8D6E4C'];
+    chartEl.innerHTML = mxHistorico.map((h, i) => {
+      const avgH = (h.avg / maxVal) * 120;
+      return `<div class="history-bar">
+        <div class="bar-val">$${h.avg.toFixed(0)}</div>
+        <div style="width:100%;"><div class="bar-fill" style="height:${avgH}px;background:linear-gradient(to top, ${gradients[i]}88, ${gradients[i]});"></div></div>
+        <div style="font-size:0.55rem;color:#4a5a3e;margin-top:3px;">$${h.min}-$${h.max}</div>
+      </div>`;
+    }).join('');
+    labelsEl.innerHTML = mxHistorico.map(h => `<span>${h.year}</span>`).join('');
+  }
+}
+
+function renderPecuarios() {
+  const container = document.getElementById('pecuarios-grid');
+  if (!container) return;
+  let html = '';
+
+  const catOrder = ["Leche","Huevo","Porcino","Ovino","Caprino"];
+  const catIcons = { Leche: "🥛", Huevo: "🥚", Porcino: "🐷", Ovino: "🐑", Caprino: "🐐" };
+
+  catOrder.forEach(cat => {
+    const cc = pecCatColors[cat];
+    const items = pecuariosMX.filter(p => p.cat === cat);
+    if (items.length === 0) return;
+
+    html += `<div class="state-header" style="color:${cc.badge};background:${cc.bg};border-left-color:${cc.border};">
+      <span>${catIcons[cat]} ${cat}</span>
+      <span style="font-size:0.65rem;font-weight:400;opacity:0.6;margin-left:auto;">${items.length} referencias</span>
+    </div>`;
+    html += '<div class="grid" style="margin-bottom:8px;">';
+
+    items.forEach(item => {
+      const change = item.price - item.prev;
+      const changePct = (change / item.prev) * 100;
+      const dir = change > 0 ? 'up' : change < 0 ? 'down' : 'flat';
+      const arrow = dir === 'up' ? '▲' : dir === 'down' ? '▼' : '■';
+      const range = item.high - item.low;
+      const pos = range > 0 ? ((item.price - item.low) / range) * 100 : 50;
+      const colors = { up: '#4CAF50', down: '#EF5350', flat: '#C8A94E' };
+      const c = colors[dir];
+
+      let miniHtml = '<div class="mini-chart">';
+      for (let i = 0; i < 12; i++) {
+        const drift = (i - 6) * (Math.random() * 1.3);
+        const h = Math.max(8, Math.min(95, pos + drift + (Math.random()-0.5)*10));
+        miniHtml += `<div class="mini-bar" style="height:${h}%;background:${c};"></div>`;
+      }
+      miniHtml += '</div>';
+
+      // MXN conversion for USD-denominated pecuarios
+      let pecMxnHtml = '';
+      if (item.unit.includes('USD')) {
+        let mxnVal = null;
+        if (item.unit.includes('cents/lb')) {
+          mxnVal = (item.price / 100) / 0.4536 * TC_MXN; // cents/lb -> MXN/kg
+        } else if (item.unit.includes('USD/cwt')) {
+          mxnVal = item.price / 45.36 * TC_MXN; // USD/cwt -> MXN/kg
+        }
+        if (mxnVal !== null) {
+          pecMxnHtml = `<div class="card-mxn">≈ $${mxnVal.toFixed(2)} MXN/kg <span style="font-size:0.58rem;font-weight:400;opacity:0.6;">(TC $${TC_MXN})</span></div>`;
+        }
+      }
+
+      html += `
+        <div class="pec-card">
+          <span class="pec-badge" style="color:${cc.badge};background:${cc.bg};border:1px solid ${cc.badge}30;">${item.region}</span>
+          <div class="card-header">
+            <div class="card-name" style="color:var(--r4p-text);">${item.name}</div>
+            <div class="card-symbol" style="border-color:${cc.border}35;">${item.unit}</div>
+          </div>
+          <div class="card-price ${dir}" style="font-size:1.5rem;font-weight:800;font-family:'R4P Heading',sans-serif;margin:4px 0;letter-spacing:-0.5px;">$${item.price.toFixed(2)}</div>
+          ${pecMxnHtml}
+          <div class="card-unit">${item.fuente}</div>
+          ${miniHtml}
+          <div class="card-change" style="font-size:0.76rem;">
+            <span class="change-val ${dir}">${arrow} ${change >= 0 ? '+' : ''}$${change.toFixed(2)}</span>
+            <span class="${dir}">(${changePct >= 0 ? '+' : ''}${changePct.toFixed(1)}%)</span>
+          </div>
+          <div class="range-row"><span>Min: $${item.low.toFixed(2)}</span><span>Max: $${item.high.toFixed(2)}</span></div>
+          <div class="card-bar" style="background:linear-gradient(90deg, transparent, ${cc.badge}50);"></div>
+        </div>`;
+    });
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+
+  // Fuentes cards
+  const fuentesGrid = document.getElementById('pecuarios-fuentes');
+  if (fuentesGrid) {
+    fuentesGrid.innerHTML = pecuariosFuentes.map(f => `
+      <div class="ctx-card" style="border-color:rgba(80,40,100,0.25);">
+        <div class="ctx-label" style="color:${f.color};">${f.label}</div>
+        <div class="ctx-value" style="color:#CE93D8;font-size:0.85rem;">${f.value}</div>
+        <div class="ctx-note">${f.note}</div>
+      </div>`).join('');
+  }
+}
+
+// ========================================================
+// INITIALIZE
+// ========================================================
+renderCBOT();
+renderMXCattle();
+renderPecuarios();
+setInterval(updateCountdown, 1000);
+updateCountdown();
+setInterval(renderCBOT, 300000);
+</script>
+</body>
+</html>
