@@ -554,13 +554,13 @@
     <!-- TENDENCIA MENSUAL POR ESTADO -->
     <div class="trend-section">
       <div class="trend-title">Tendencia de Precios por Estado ($/kg en pie)</div>
-      <div class="trend-subtitle">Selecciona categoria y hasta 4 estados para comparar &mdash; Ultimos 12 meses (Abr 2025 &ndash; Mar 2026)</div>
+      <div class="trend-subtitle">Selecciona categoria y estados para comparar &mdash; Ultimos 12 meses (Abr 2025 &ndash; Mar 2026)</div>
       <div style="margin-bottom:10px;">
         <div style="font-size:0.65rem;color:var(--r4p-muted);margin-bottom:6px;font-family:'R4P Heading',sans-serif;text-transform:uppercase;letter-spacing:1px;">Categoria:</div>
         <div class="filter-chips" id="trend-cat-chips"></div>
       </div>
       <div style="margin-bottom:14px;">
-        <div style="font-size:0.65rem;color:var(--r4p-muted);margin-bottom:6px;font-family:'R4P Heading',sans-serif;text-transform:uppercase;letter-spacing:1px;">Estados (max 4):</div>
+        <div style="font-size:0.65rem;color:var(--r4p-muted);margin-bottom:6px;font-family:'R4P Heading',sans-serif;text-transform:uppercase;letter-spacing:1px;">Estados:</div>
         <div class="filter-chips" id="trend-state-chips"></div>
       </div>
       <div class="trend-chart-wrap" id="trend-chart"></div>
@@ -1476,7 +1476,7 @@ function toggleTrendState(state) {
   if (trendVisibleStates.has(state)) {
     if (trendVisibleStates.size > 1) trendVisibleStates.delete(state);
   } else {
-    if (trendVisibleStates.size < 4) trendVisibleStates.add(state);
+    trendVisibleStates.add(state);
   }
   renderTrendChart();
 }
