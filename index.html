@@ -471,7 +471,15 @@
     .ctx-grid { grid-template-columns: 1fr; }
     .header-right { display: none; }
   }
-</style>
+
+    .news-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 16px 20px; border-left: 4px solid #7A8A6E; transition: transform 0.2s, box-shadow 0.2s; }
+    .news-card:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    .news-date { font-size: 0.75rem; color: #999; margin-bottom: 4px; }
+    .news-title { font-size: 1rem; font-weight: 600; color: #E8E4D9; margin-bottom: 6px; }
+    .news-summary { font-size: 0.85rem; color: #B0A990; line-height: 1.4; }
+    .news-source { font-size: 0.7rem; color: #777; margin-top: 6px; font-style: italic; }
+    .tab-noticias.active { background: linear-gradient(135deg, #1565C0, #0D47A1) !important; color: white !important; }
+  </style>
 </head>
 <body>
 
@@ -508,6 +516,7 @@
     <div class="tab tab-ganado" onclick="filterSection('ganado')">Ganado Bovino</div>
     <div class="tab tab-pecuarios" onclick="filterSection('pecuarios')">Otros Pecuarios</div>
     <div class="tab" onclick="filterSection('otros')">Otros Commodities</div>
+    <div class="tab tab-noticias" onclick="filterSection('noticias')">Noticias</div>
   </div>
 
   <!-- ===== SECTION 1: GRANOS Y OLEAGINOSAS ===== -->
@@ -590,6 +599,10 @@
     <div class="grid" id="otros-grid"></div>
   </div>
 
+</div>
+
+<div class="data-section" id="section-noticias" style="display:none;">
+  <div id="news-container" style="display:flex;flex-direction:column;gap:12px;"></div>
 </div>
 
 <!-- FOOTER -->
@@ -781,6 +794,18 @@ function renderCBOT() {
 }
 
 function filterSection(which) {
+      var newsEl = document.getElementById("section-noticias");
+      if (newsEl) newsEl.style.display = "none";
+      if (which === "noticias") {
+        document.querySelectorAll(".data-section").forEach(function(s){ s.style.display = "none"; });
+        newsEl.style.display = "block";
+        document.querySelectorAll(".tab").forEach(function(t){ t.classList.remove("active"); });
+        document.querySelector(".tab-noticias").classList.add("active");
+        var nc = document.getElementById("news-container");
+        nc.innerHTML = newsData.map(function(n){ return '<div class="news-card" style="border-left-color:'+n.color+'"><div class="news-date">'+n.date+'</div><div class="news-title">'+n.title+'</div><div class="news-summary">'+n.summary+'</div><div class="news-source">Fuente: '+n.source+'</div></div>'; }).join("");
+        return;
+      }
+
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   event.target.classList.add('active');
   document.querySelectorAll('.data-section').forEach(s => {
@@ -1064,6 +1089,20 @@ const mxContext = [
   { label: "Becerro Record", value: "$190/kg", note: "Expogan Chihuahua 2025", color: "#C8A94E" },
   { label: "Tipo de Cambio", value: "$17.84", note: "MXN/USD Banxico FIX 16 Mar 2026", color: "#7A8A6E" },
 ];
+
+    const newsData = [
+      { date: "16 Mar 2026", title: "Planta de moscas est\u00e9riles en Chiapas estar\u00e1 lista en 2 meses", summary: "Sheinbaum confirma producci\u00f3n de 100M moscas/semana para combatir barrenador. Inversi\u00f3n MX-US $21M USD.", source: "Expansi\u00f3n", color: "#1565C0" },
+      { date: "14 Mar 2026", title: "Frontera cerrada cumple 10 meses: p\u00e9rdidas $1,552 MDD", summary: "1.19M bovinos varados. Ganaderos del norte enfrentan la peor crisis en d\u00e9cadas.", source: "BM Editores", color: "#EF5350" },
+      { date: "13 Mar 2026", title: "M\u00e9xico analiza levantar restricci\u00f3n a cerdo espa\u00f1ol", summary: "Tras peste porcina africana en Barcelona, M\u00e9xico revisa reapertura a importaciones de cerdo de Espa\u00f1a.", source: "La Jornada", color: "#FF9800" },
+      { date: "09 Mar 2026", title: "AgroBaja 2026: ganado se subasta hasta en $115/kg", summary: "Pujas iniciaron en $85/kg con picos de $115/kg, reflejando presi\u00f3n alcista.", source: "El Imparcial", color: "#4CAF50" },
+      { date: "05 Mar 2026", title: "USDA: M\u00e9xico producir\u00e1 m\u00e1s carne sin exportar ganado en pie", summary: "Exportaciones en pie a cero. Producci\u00f3n dom\u00e9stica sube. Carne premium +6% a 335k ton.", source: "Capital Press", color: "#1565C0" },
+      { date: "01 Mar 2026", title: "Revisi\u00f3n USMCA 2026 genera incertidumbre sectorial", summary: "Propuestas de dividir T-MEC amenazan contratos, aranceles y mecanismos de disputas.", source: "Mexico News Daily", color: "#FF9800" },
+      { date: "20 Feb 2026", title: "Precio carne de res sube 16.5% interanual en enero", summary: "Comecarne: tendencia alcista por barrenador, aranceles EE.UU. y fin del PACIC.", source: "El Informador", color: "#EF5350" },
+      { date: "08 Feb 2026", title: "M\u00e9xico importar\u00e1 110M moscas est\u00e9riles/semana", summary: "Gobierno intensifica liberaci\u00f3n de moscas est\u00e9riles en franja fronteriza.", source: "El Imparcial", color: "#1565C0" },
+      { date: "05 Jan 2026", title: "M\u00e9xico reactiva aranceles a carne importada", summary: "Fin exenci\u00f3n PACIC. Aranceles-cupo 2026: tarifa preferencial hasta agotar cupo.", source: "La Silla Rota", color: "#FF9800" },
+      { date: "02 Jan 2026", title: "Sequ\u00eda severa y hato reducido limitan producci\u00f3n 2026", summary: "Presas norte al 30% capacidad. Vacas f\u00e9rtiles caen, restringiendo cosecha becerros.", source: "RFD-TV", color: "#EF5350" }
+    ];
+
 
 // ========================================================
 // OTROS PECUARIOS — Leche, Huevo, Cerdo, Ovino, Caprino
