@@ -655,30 +655,30 @@ const commodities = {
 // CBOT PRICES — Updated March 14, 2026
 // ========================================================
 const referencePrices = {
-  'ZC=F': { price: 467.25, prev: 452.50, low52: 391.25, high52: 495.00 },
-  'ZW=F': { price: 613.75, prev: 618.50, low52: 510.00, high52: 680.00 },
-  'KE=F': { price: 628.50, prev: 635.25, low52: 518.00, high52: 710.00 },
-  'ZO=F': { price: 380.00, prev: 355.00, low52: 285.00, high52: 425.00 },
-  'ZR=F': { price: 11.375, prev: 14.35, low52: 9.50, high52: 18.50 },
-  'ZS=F': { price: 1225.25, prev: 1211.00, low52: 940.00, high52: 1320.00 },
-  'ZL=F': { price: 67.44, prev: 59.70, low52: 39.50, high52: 72.00 },
-  'ZM=F': { price: 322.70, prev: 316.00, low52: 275.00, high52: 365.00 },
+  'ZC=F': { price: 467.5, prev: 467.25, low52: 391.25, high52: 495 },
+  'ZW=F': { price: 609, prev: 613.75, low52: 510, high52: 680 },
+  'KE=F': { price: 629.25, prev: 628.5, low52: 518, high52: 710 },
+  'ZO=F': { price: 371.25, prev: 380, low52: 285, high52: 425 },
+  'ZR=F': { price: 11.33, prev: 11.375, low52: 9.5, high52: 18.5 },
+  'ZS=F': { price: 1163.75, prev: 1225.25, low52: 940, high52: 1320 },
+  'ZL=F': { price: 65.32, prev: 67.44, low52: 39.5, high52: 72 },
+  'ZM=F': { price: 327.7, prev: 322.7, low52: 275, high52: 365 },
   'RS=F': { price: 642.50, prev: 638.40, low52: 555.00, high52: 720.00 },
-  'LE=F': { price: 230.90, prev: 233.10, low52: 175.00, high52: 247.00 },
-  'GF=F': { price: 343.10, prev: 353.325, low52: 235.00, high52: 360.00 },
-  'HE=F': { price: 93.45, prev: 95.575, low52: 72.00, high52: 108.00 },
-  'DC=F': { price: 16.66, prev: 19.45, low52: 13.50, high52: 23.50 },
-  'CT=F': { price: 65.85, prev: 64.27, low52: 58.00, high52: 96.00 },
-  'SB=F': { price: 14.42, prev: 14.08, low52: 12.50, high52: 27.50 },
-  'KC=F': { price: 348.55, prev: 345.60, low52: 175.00, high52: 430.00 },
-  'CC=F': { price: 5989.00, prev: 7850.00, low52: 4500.00, high52: 12800.00 },
-  'LBS=F': { price: 533.00, prev: 555.00, low52: 420.00, high52: 630.00 },
+  'LE=F': { price: 230.475, prev: 230.9, low52: 175, high52: 247 },
+  'GF=F': { price: 339, prev: 343.1, low52: 235, high52: 360 },
+  'HE=F': { price: 86.925, prev: 93.45, low52: 72, high52: 108 },
+  'DC=F': { price: 16.13, prev: 16.66, low52: 13.5, high52: 23.5 },
+  'CT=F': { price: 68.16, prev: 65.85, low52: 58, high52: 96 },
+  'SB=F': { price: 15.16, prev: 14.42, low52: 12.5, high52: 27.5 },
+  'KC=F': { price: 291.75, prev: 348.55, low52: 175, high52: 430 },
+  'CC=F': { price: 3282, prev: 5989, low52: 3282, high52: 12800 },
+  'LBS=F': { price: 380.6, prev: 533, low52: 380.6, high52: 630 },
   'MW=F': { price: 645.50, prev: 643.00, low52: 540.00, high52: 720.00 },
   'SGG=F': { price: 11.10, prev: 10.85, low52: 8.50, high52: 13.50 },
   'KPO=F': { price: 4572.00, prev: 4280.00, low52: 3400.00, high52: 4900.00 },
-  'OJ=F': { price: 204.52, prev: 199.95, low52: 150.00, high52: 520.00 },
+  'OJ=F': { price: 178, prev: 204.52, low52: 150, high52: 520 },
   'TF=F': { price: 378.00, prev: 375.00, low52: 280.00, high52: 420.00 },
-  'EH=F': { price: 1.89, prev: 1.825, low52: 1.38, high52: 2.20 },
+  'EH=F': { price: 2.22, prev: 1.89, low52: 1.38, high52: 2.22 },
 };
 
 function getSimulatedPrice(sym) {
@@ -1084,10 +1084,10 @@ const mxHistorico = [
 const mxContext = [
   { label: "Exportacion 2024", value: "1,240,203", note: "cabezas a EE.UU.", color: "#4CAF50" },
   { label: "Export. acum. 2025", value: "~0", note: "Frontera cerrada 2025-2026. Sheinbaum-Rollins negocian reapertura", color: "#EF5350" },
-  { label: "Frontera EE.UU.", value: "CERRADA", note: "Gusano barrenador activo (Llera Tam, Edo.Mex). Planta moscas esteriles MX-EE.UU. 100M/sem, 1er sem 2026", color: "#EF5350" },
+  { label: "Frontera EE.UU.", value: "CERRADA", note: "1,033 casos activos en 19 estados al 17 Mar 2026", color: "#EF5350" },
   { label: "Perdida estimada", value: "$1,552 MDD", note: "~1.19M cabezas varadas. Prod. carne MX +6%. USDA: 0 export MX 2026", color: "#EF5350" },
   { label: "Becerro Record", value: "$190/kg", note: "Expogan Chihuahua 2025", color: "#C8A94E" },
-  { label: "Tipo de Cambio", value: "$17.84", note: "MXN/USD Banxico FIX 16 Mar 2026", color: "#7A8A6E" },
+  { label: "Tipo de Cambio", value: "$17.67", note: "MXN/USD Banxico FIX 19 Mar 2026", color: "#7A8A6E" },
 ];
 
     const newsData = [
