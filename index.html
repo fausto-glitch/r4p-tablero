@@ -652,31 +652,31 @@ const commodities = {
 };
 
 // ========================================================
-// CBOT PRICES — Updated March 14, 2026
+// CBOT PRICES — Updated April 1, 2026
 // ========================================================
 const referencePrices = {
-  'ZC=F': { price: 467.5, prev: 467.25, low52: 391.25, high52: 495 },
-  'ZW=F': { price: 609, prev: 613.75, low52: 510, high52: 680 },
-  'KE=F': { price: 629.25, prev: 628.5, low52: 518, high52: 710 },
-  'ZO=F': { price: 371.25, prev: 380, low52: 285, high52: 425 },
-  'ZR=F': { price: 11.33, prev: 11.375, low52: 9.5, high52: 18.5 },
-  'ZS=F': { price: 1163.75, prev: 1225.25, low52: 940, high52: 1320 },
-  'ZL=F': { price: 65.32, prev: 67.44, low52: 39.5, high52: 72 },
-  'ZM=F': { price: 327.7, prev: 322.7, low52: 275, high52: 365 },
-  'RS=F': { price: 642.50, prev: 638.40, low52: 555.00, high52: 720.00 },
-  'LE=F': { price: 230.475, prev: 230.9, low52: 175, high52: 247 },
-  'GF=F': { price: 339, prev: 343.1, low52: 235, high52: 360 },
-  'HE=F': { price: 86.925, prev: 93.45, low52: 72, high52: 108 },
-  'DC=F': { price: 16.13, prev: 16.66, low52: 13.5, high52: 23.5 },
-  'CT=F': { price: 68.16, prev: 65.85, low52: 58, high52: 96 },
-  'SB=F': { price: 15.16, prev: 14.42, low52: 12.5, high52: 27.5 },
-  'KC=F': { price: 291.75, prev: 348.55, low52: 175, high52: 430 },
-  'CC=F': { price: 3282, prev: 5989, low52: 3282, high52: 12800 },
-  'LBS=F': { price: 380.6, prev: 533, low52: 380.6, high52: 630 },
-  'MW=F': { price: 645.50, prev: 643.00, low52: 540.00, high52: 720.00 },
+  'ZC=F': { price: 449.75, prev: 467.5, low52: 391.25, high52: 495 },
+  'ZW=F': { price: 597, prev: 609, low52: 510, high52: 680 },
+  'KE=F': { price: 614.75, prev: 629.25, low52: 518, high52: 710 },
+  'ZO=F': { price: 346.25, prev: 371.25, low52: 285, high52: 425 },
+  'ZR=F': { price: 11.25, prev: 11.33, low52: 9.5, high52: 18.5 },
+  'ZS=F': { price: 1153.75, prev: 1163.75, low52: 940, high52: 1320 },
+  'ZL=F': { price: 67.1, prev: 65.32, low52: 39.5, high52: 72 },
+  'ZM=F': { price: 314.4, prev: 327.7, low52: 275, high52: 365 },
+  'RS=F': { price: 727.7, prev: 642.5, low52: 555, high52: 727.7 },
+  'LE=F': { price: 235.3, prev: 230.475, low52: 175, high52: 247 },
+  'GF=F': { price: 350.2, prev: 339, low52: 235, high52: 360 },
+  'HE=F': { price: 86.5, prev: 86.925, low52: 72, high52: 108 },
+  'DC=F': { price: 17.38, prev: 16.13, low52: 13.5, high52: 23.5 },
+  'CT=F': { price: 68.81, prev: 68.16, low52: 58, high52: 96 },
+  'SB=F': { price: 15.14, prev: 15.16, low52: 12.5, high52: 27.5 },
+  'KC=F': { price: 293.55, prev: 291.75, low52: 175, high52: 430 },
+  'CC=F': { price: 3338, prev: 3282, low52: 3282, high52: 12800 },
+  'LBS=F': { price: 380.6, prev: 380.6, low52: 380.6, high52: 630 },
+  'MW=F': { price: 658.5, prev: 645.5, low52: 540, high52: 720 },
   'SGG=F': { price: 11.10, prev: 10.85, low52: 8.50, high52: 13.50 },
-  'KPO=F': { price: 4572.00, prev: 4280.00, low52: 3400.00, high52: 4900.00 },
-  'OJ=F': { price: 178, prev: 204.52, low52: 150, high52: 520 },
+  'KPO=F': { price: 4541, prev: 4572, low52: 3400, high52: 4900 },
+  'OJ=F': { price: 195.65, prev: 178, low52: 150, high52: 520 },
   'TF=F': { price: 378.00, prev: 375.00, low52: 280.00, high52: 420.00 },
   'EH=F': { price: 2.22, prev: 1.89, low52: 1.38, high52: 2.22 },
 };
@@ -790,11 +790,7 @@ function renderCBOT() {
     cmeGrid.innerHTML = html;
   }
   document.getElementById('lastUpdate').textContent =
-    'Ultima actualizacion: ' + new Date().toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'medium' });
-}
-
-function filterSection(which) {
-      var newsEl = document.getElementById("section-noticias");
+    'ultima actualizacion: 1 Abr 2026"section-noticias");
       if (newsEl) newsEl.style.display = "none";
       if (which === "noticias") {
         document.querySelectorAll(".data-section").forEach(function(s){ s.style.display = "none"; });
@@ -1083,11 +1079,11 @@ const mxHistorico = [
 
 const mxContext = [
   { label: "Exportacion 2024", value: "1,240,203", note: "cabezas a EE.UU.", color: "#4CAF50" },
-  { label: "Export. acum. 2025", value: "~0", note: "Frontera cerrada 2025-2026. Sheinbaum-Rollins negocian reapertura", color: "#EF5350" },
-  { label: "Frontera EE.UU.", value: "CERRADA", note: "1,033 casos activos en 19 estados al 17 Mar 2026", color: "#EF5350" },
-  { label: "Perdida estimada", value: "$1,552 MDD", note: "~1.19M cabezas varadas. Prod. carne MX +6%. USDA: 0 export MX 2026", color: "#EF5350" },
+  { label: "Export. acum. 2025", value: "~0", note: "Frontera cerrada 2025-2026. Posible apertura gradual en negociacion", color: "#EF5350" },
+  { label: "Frontera EE.UU.", value: "CERRADA", note: "1,000+ casos activos en 21 estados al 27 Mar 2026. Plaga avanza al norte.", color: "#EF5350" },
+  { label: "Perdida estimada", value: "$1,552 MDD", note: "~1.19M cabezas varadas. Planta moscas esteriles Chiapas lista en 2 meses", color: "#EF5350" },
   { label: "Becerro Record", value: "$190/kg", note: "Expogan Chihuahua 2025", color: "#C8A94E" },
-  { label: "Tipo de Cambio", value: "$17.67", note: "MXN/USD Banxico FIX 19 Mar 2026", color: "#7A8A6E" },
+  { label: "Tipo de Cambio", value: "$18.07", note: "MXN/USD Banxico FIX 1 Abr 2026", color: "#7A8A6E" },
 ];
 
     const newsData = [
